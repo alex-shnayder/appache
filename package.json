@@ -1,0 +1,28 @@
+{
+  "name": "appache",
+  "version": "0.0.0",
+  "scripts": {
+    "precommit": "lint-staged",
+    "test": "mocha --require denude/register src/**/tests/*.js src/**/test.js"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
+  "devDependencies": {
+    "denude": "^0.2.1",
+    "eslint": "^3.19.0",
+    "eslint-plugin-import": "^2.2.0",
+    "husky": "^0.13.3",
+    "lint-staged": "^3.4.0",
+    "mocha": "^3.5.0"
+  },
+  "dependencies": {
+    "ajv": "^5.2.2",
+    "ajv-keywords": "^2.1.0",
+    "hooter": "^0.18.0",
+    "object-path-immutable": "^0.5.1"
+  }
+}
