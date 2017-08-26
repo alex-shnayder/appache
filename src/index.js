@@ -6,6 +6,7 @@ const pluginize = require('./pluginize')
 
 const corePlugins = {
   config: require('./plugins/config'),
+  inherit: require('./plugins/inherit'),
   error: require('./plugins/error'),
   execute: require('./plugins/execute'),
 }
