@@ -1,6 +1,7 @@
 {
   "name": "appache",
   "version": "0.0.0",
+  "main": "src/index.js",
   "scripts": {
     "precommit": "lint-staged",
     "test": "mocha --require denude/register src/**/tests/*.js src/**/test.js"

@@ -48,12 +48,10 @@ function validateConfig(schema, config) {
     throw new Error(`The config doesn't match the schema:\n${ajv.errorsText()}`)
   }
 
-  if (config.commands) {
-    config.commands.forEach((command) => {
-      command = populateCommand(config, command)
-      validateCommand(command)
-    })
-  }
+  config.commands.forEach((command) => {
+    command = populateCommand(config, command)
+    validateCommand(command)
+  })
 }
 
 
