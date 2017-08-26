@@ -1,7 +1,13 @@
 {
   "name": "appache",
   "version": "0.0.0",
-  "main": "src/index.js",
+  "description": "",
+  "repository": "alex-shnayder/appache",
+  "homepage": "https://github.com/alex-shnayder/appache#readme",
+  "bugs": "https://github.com/alex-shnayder/appache/issues",
+  "license": "ISC",
+  "keywords": [
+  ],
   "scripts": {
     "precommit": "lint-staged",
     "test": "mocha --require denude/register src/**/tests/*.js src/**/test.js"
@@ -12,6 +18,7 @@
       "git add"
     ]
   },
+  "main": "src/index.js",
   "devDependencies": {
     "denude": "^0.2.1",
     "eslint": "^3.19.0",
