@@ -6,9 +6,9 @@ const validateConfig = require('./validateConfig')
 module.exports = function* configPlugin() {
   let schema, config
 
-  yield hookEnd('schema', (_schema) => {
-    schema = _schema
-    return _schema
+  yield hookEnd('schema', function* (_schema) {
+    schema = yield next(_schema).or(_schema)
+    return schema
   })
 
   yield hookStart('start', function* () {

@@ -1,8 +1,10 @@
 const Hooter = require('hooter')
 const { next } = require('hooter/effects')
+const baseSchema = require('./schema')
 const configPlugin = require('./plugins/config')
 const errorPlugin = require('./plugins/error')
 const executePlugin = require('./plugins/execute')
+
 
 const EVENTS = [
   ['schema', 'sync'],
@@ -34,7 +36,7 @@ module.exports = function appache(plugins) {
   })
 
   lifecycle.hookStart('init', function* () {
-    let schema = lifecycle.toot('schema', {})
+    let schema = lifecycle.tootWith('schema', (schema) => schema, baseSchema)
     return yield next(schema)
   })
 
