@@ -11,6 +11,16 @@ const corePlugins = {
   execute: require('./plugins/execute'),
 }
 const defaultPlugins = {
+  version: require('./plugins/version'),
+  help: require('./plugins/help'),
+  require: require('./plugins/require'),
+  validate: require('./plugins/validate'),
+  coerce: require('./plugins/coerce'),
+  types: require('./plugins/types'),
+  canonize: require('./plugins/canonize'),
+  camelize: require('./plugins/camelize'),
+  defaultValues: require('./plugins/defaultValues'),
+  processTitle: require('./plugins/processTitle'),
 }
 
 
