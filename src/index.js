@@ -1,50 +1,19 @@
-const Hooter = require('hooter')
-const { next } = require('hooter/effects')
-const baseSchema = require('./schema')
-const configPlugin = require('./plugins/config')
-const errorPlugin = require('./plugins/error')
-const executePlugin = require('./plugins/execute')
+/* eslint-disable global-require */
+
+const appache = require('./appache')
+const pluginize = require('./pluginize')
 
 
-const EVENTS = [
-  ['schema', 'sync'],
-  ['init', 'sync'],
-  ['start', 'sync'],
-  ['config', 'sync'],
-  ['execute', 'async'],
-  ['process', 'async'],
-  ['handle', 'async'],
-  ['tap', 'async'],
-  ['error', 'sync'],
-]
-const CORE_PLUGINS = [
-  configPlugin, errorPlugin, executePlugin,
-]
+const corePlugins = {
+  config: require('./plugins/config'),
+  error: require('./plugins/error'),
+  execute: require('./plugins/execute'),
+}
+const defaultPlugins = {
+}
 
 
-module.exports = function appache(plugins) {
-  let lifecycle = new Hooter()
-
-  if (plugins && !Array.isArray(plugins)) {
-    throw new Error('Plugins must be an array of functions')
-  }
-
-  plugins = plugins ? CORE_PLUGINS.concat(plugins) : CORE_PLUGINS
-
-  EVENTS.forEach(([event, mode]) => {
-    lifecycle.register(event, mode)
-  })
-
-  lifecycle.hookStart('init', function* () {
-    let schema = lifecycle.tootWith('schema', (schema) => schema, baseSchema)
-    return yield next(schema)
-  })
-
-  plugins.forEach((plugin) => {
-    let boundLifecycle = lifecycle.bind(plugin)
-    plugin = boundLifecycle.wrap(plugin)
-    plugin(boundLifecycle)
-  })
-
-  return lifecycle.tootWith('init', (schema, result) => result)
+module.exports = function appacheWithPlugins(userPlugins) {
+  let plugins = pluginize(corePlugins, defaultPlugins, userPlugins)
+  return appache(plugins)
 }
