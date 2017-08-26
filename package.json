@@ -1,13 +1,12 @@
 {
   "name": "appache",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "",
   "repository": "alex-shnayder/appache",
   "homepage": "https://github.com/alex-shnayder/appache#readme",
   "bugs": "https://github.com/alex-shnayder/appache/issues",
   "license": "ISC",
-  "keywords": [
-  ],
+  "keywords": [],
   "scripts": {
     "precommit": "lint-staged",
     "test": "mocha --require denude/register src/**/tests/*.js src/**/test.js"
