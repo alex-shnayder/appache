@@ -1,16 +1,12 @@
-const { next, hookStart, hookEnd, hookAfter, toot } = require('hooter/effects')
+const { next, hookStart, hookEnd, hookEndResult, toot } = require('hooter/effects')
 
 
 module.exports = function* configPlugin() {
-  let schema, config
-
-  yield hookAfter('schema', (_schema) => {
-    schema = _schema
-    return schema
-  })
+  let schema = yield hookEndResult('schema')
+  let config
 
   yield hookStart('start', function* () {
-    config = yield toot('config', schema, {})
+    config = yield toot('config', schema.get(), {})
     return yield next(config)
   })
 
