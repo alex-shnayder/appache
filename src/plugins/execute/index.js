@@ -1,5 +1,5 @@
 const {
-  next, suspend, getResume, toot, hookStart, hookEnd,
+  next, suspend, getResume, toot, hookStart, hookEnd, hookEndAfter,
 } = require('hooter/effects')
 const preprocessRequest = require('./preprocessRequest')
 
@@ -28,7 +28,20 @@ function handleCb(config, command, context) {
 
 
 module.exports = function* executePlugin() {
-  yield hookStart('execute', function* (config, request) {
+  let config
+
+  yield hookEndAfter('config', (_config) => {
+    config = _config
+    return _config
+  })
+
+  yield hookStart('execute', function* (request) {
+    if (!config) {
+      throw new Error(
+        'The config must already be defined at the beginning of "execute"'
+      )
+    }
+
     this.source = this.tooter
     request = preprocessRequest(request, config)
     return yield next(config, request)

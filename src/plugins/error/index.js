@@ -1,4 +1,6 @@
-const { next, hookStart, hookEnd, call } = require('hooter/effects')
+const {
+  next, hookStart, hookEnd, hookEndAfter, call,
+} = require('hooter/effects')
 
 
 const NO_HANDLER = {}
@@ -25,6 +27,16 @@ function* errorEndHandler(config, err, ...args) {
 }
 
 module.exports = function* errorPlugin() {
+  let config
+
+  yield hookEndAfter('config', (_config) => {
+    config = _config
+    return _config
+  })
+  yield hookStart('error', function* (...args) {
+    return yield next(config, ...args)
+  })
+
   yield hookStart('error', errorStartHandler)
   yield hookEnd('error', errorEndHandler)
 }

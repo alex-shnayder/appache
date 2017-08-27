@@ -8,6 +8,7 @@ const corePlugins = {
   config: require('./plugins/config'),
   inherit: require('./plugins/inherit'),
   error: require('./plugins/error'),
+  start: require('./plugins/start'),
   execute: require('./plugins/execute'),
 }
 const defaultPlugins = {
