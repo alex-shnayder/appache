@@ -11,7 +11,7 @@ describe('processTitle plugin', () => {
     assert.deepStrictEqual(value, {
       effect: 'hook',
       event: 'config',
-      mode: 'start',
+      priority: 'start',
       fn: configHandler,
     })
   })

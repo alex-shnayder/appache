@@ -12,8 +12,24 @@ describe('error plugin', () => {
 
     assert.deepStrictEqual(result.value, {
       effect: 'hook',
+      event: 'config',
+      priority: 'end',
+      type: 'observe',
+    })
+
+    result = generator.next()
+    // assert.deepStrictEqual(result.value, {
+    //   effect: 'hook',
+    //   event: 'error',
+    //   priority: 'start',
+    //   fn: , // the fn here is scope-dependent, hard to test
+    // })
+
+    result = generator.next()
+    assert.deepStrictEqual(result.value, {
+      effect: 'hook',
       event: 'error',
-      mode: 'start',
+      priority: 'start',
       fn: errorStartHandler,
     })
 
@@ -21,7 +37,7 @@ describe('error plugin', () => {
     assert.deepStrictEqual(result.value, {
       effect: 'hook',
       event: 'error',
-      mode: 'end',
+      priority: 'end',
       fn: errorEndHandler,
     })
   })
