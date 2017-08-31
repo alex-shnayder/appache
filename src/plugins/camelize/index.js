@@ -22,6 +22,6 @@ function* processHandler(_, command, ...args) {
   return yield next(_, command, ...args)
 }
 
-module.exports = function* camelCasePlugin() {
+module.exports = function* camelizePlugin() {
   yield hookEnd('process', processHandler)
 }
