@@ -1,32 +1,30 @@
 const Hooter = require('hooter')
 
 
-const EVENTS = [
-  ['schema', 'sync'],
-  ['init', 'sync'],
-  ['start', 'sync'],
-  ['activate', 'sync'],
-  ['deactivate', 'sync'],
-  ['stop', 'sync'],
-  ['config', 'sync'],
-  ['execute', 'async'],
-  ['process', 'async'],
-  ['handle', 'async'],
-  ['tap', 'async'],
-  ['error', 'sync'],
-]
+const HOOTER_SETTINGS = {
+  events: {
+    schema: { mode: 'sync' },
+    init: { mode: 'sync' },
+    start: { mode: 'sync' },
+    activate: { mode: 'sync' },
+    deactivate: { mode: 'sync' },
+    stop: { mode: 'sync' },
+    config: { mode: 'sync' },
+    execute: { mode: 'async' },
+    process: { mode: 'async' },
+    handle: { mode: 'async' },
+    tap: { mode: 'async' },
+    error: { mode: 'sync' },
+  },
+}
 
 
 module.exports = function appache(plugins) {
-  let lifecycle = new Hooter()
+  let lifecycle = new Hooter(HOOTER_SETTINGS)
 
   if (plugins && !Array.isArray(plugins)) {
     throw new Error('Plugins must be an array of functions')
   }
-
-  EVENTS.forEach(([event, mode]) => {
-    lifecycle.register(event, mode)
-  })
 
   plugins.forEach((plugin) => {
     let boundLifecycle = lifecycle.bind(plugin)

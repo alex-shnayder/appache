@@ -31,7 +31,7 @@ module.exports = function* executePlugin() {
   let config = yield hookEndResult('config')
 
   yield hookStart('execute', function* (request) {
-    let _config = config.get()
+    let _config = config.value
 
     if (!_config) {
       throw new Error(

@@ -30,7 +30,7 @@ module.exports = function* errorPlugin() {
   let config = yield hookEndResult('config')
 
   yield hookStart('error', function* (...args) {
-    return yield next(config.get(), ...args)
+    return yield next(config.value, ...args)
   })
 
   yield hookStart('error', errorStartHandler)

@@ -8,7 +8,7 @@ module.exports = function* startPlugin() {
   let config
 
   yield hookStart('start', function* () {
-    config = yield toot('config', schema.get(), {})
+    config = yield toot('config', schema.value, {})
     return yield next(config)
   })
 
