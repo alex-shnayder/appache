@@ -1,4 +1,4 @@
-const { next, hookStart } = require('hooter/effects')
+const { next, hook } = require('hooter/effects')
 const validators = require('./validators')
 const coercers = require('./coercers')
 
@@ -25,15 +25,15 @@ function modifyOptions(options) {
 }
 
 module.exports = function* typesPlugin() {
-  yield hookStart('config', function* (_, config, ...args) {
-    let options = config.options
+  yield hook('config', function* (schema, config, ...args) {
+    let { options } = config
 
     if (!options) {
-      return yield next(_, config, ...args)
+      return yield next(schema, config, ...args)
     }
 
     options = modifyOptions(options)
     config = Object.assign({}, config, { options })
-    return yield next(_, config, ...args)
+    return yield next(schema, config, ...args)
   })
 }
