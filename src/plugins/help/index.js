@@ -18,7 +18,7 @@ function createHelpOption(schema) {
 
 function injectOptions(schema, config) {
   let helpOptions = []
-  let commands = config.commands.map((command) => {
+  let commands = config.commands && config.commands.map((command) => {
     let { help, options } = command
 
     if (!help) {

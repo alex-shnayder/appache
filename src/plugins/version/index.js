@@ -29,7 +29,7 @@ function detectVersion() {
 
 function injectOptions(schema, config) {
   let needsVersionOption = false
-  let commands = config.commands.map((command) => {
+  let commands = config.commands && config.commands.map((command) => {
     let { version, options } = command
 
     if (!version) {
