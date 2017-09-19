@@ -24,6 +24,7 @@ const defaultPlugins = {
   camelize: require('./plugins/camelize'),
   defaultValues: require('./plugins/defaultValues'),
   processTitle: require('./plugins/processTitle'),
+  api: require('./plugins/api'),
 }
 
 
