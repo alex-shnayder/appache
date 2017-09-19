@@ -6,7 +6,11 @@
   "homepage": "https://github.com/alex-shnayder/appache#readme",
   "bugs": "https://github.com/alex-shnayder/appache/issues",
   "license": "ISC",
-  "keywords": [],
+  "keywords": [
+    "command",
+    "task",
+    "framework"
+  ],
   "scripts": {
     "precommit": "lint-staged",
     "test": "mocha --require denude/register src/**/tests/*.js src/**/test.js"
