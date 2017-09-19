@@ -13,6 +13,7 @@ describe('processTitle plugin', () => {
       event: 'config',
       priority: 'start',
       fn: configHandler,
+      routineMode: 'default',
     })
   })
 

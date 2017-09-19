@@ -13,6 +13,7 @@ describe('canonize plugin', () => {
       event: 'process',
       priority: 'end',
       fn: processHandler,
+      routineMode: 'default',
     })
   })
 

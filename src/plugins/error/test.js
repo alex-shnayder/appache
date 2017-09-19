@@ -14,7 +14,7 @@ describe('error plugin', () => {
       effect: 'hook',
       event: 'config',
       priority: 'end',
-      type: 'observe',
+      routineMode: 'result',
     })
 
     result = generator.next()
@@ -31,6 +31,7 @@ describe('error plugin', () => {
       event: 'error',
       priority: 'start',
       fn: errorStartHandler,
+      routineMode: 'default',
     })
 
     result = generator.next()
@@ -39,6 +40,7 @@ describe('error plugin', () => {
       event: 'error',
       priority: 'end',
       fn: errorEndHandler,
+      routineMode: 'default',
     })
   })
 
