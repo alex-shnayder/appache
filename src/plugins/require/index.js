@@ -1,7 +1,6 @@
 const { next, hook } = require('hooter/effects')
 const modifySchema = require('./modifySchema')
-const handleUnknownCommand = require('./handleUnknownCommand')
-const validateCommand = require('./validateCommand')
+const validateCommandOptions = require('./validateCommandOptions')
 
 
 module.exports = function* requirePlugin() {
@@ -11,11 +10,10 @@ module.exports = function* requirePlugin() {
   })
 
   yield hook('process', function* (config, command) {
-    if (!command.config) {
-      handleUnknownCommand(config, command)
+    if (command.config) {
+      validateCommandOptions(command)
     }
 
-    validateCommand(command)
     return yield next(config, command)
   })
 }

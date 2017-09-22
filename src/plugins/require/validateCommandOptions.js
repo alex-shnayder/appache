@@ -1,7 +1,7 @@
 const { InputError } = require('../../common')
 
 
-function validateCommand({ options, config }) {
+function validateCommandOptions({ options, config }) {
   if (config.options && config.options.length) {
     config.options.forEach((optionConfig) => {
       if (optionConfig.required) {
@@ -26,4 +26,4 @@ function validateCommand({ options, config }) {
 }
 
 
-module.exports = validateCommand
+module.exports = validateCommandOptions
