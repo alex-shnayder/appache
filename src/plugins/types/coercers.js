@@ -1,4 +1,5 @@
-const { resolve } = require('path')
+const { resolve, join } = require('path')
+const { homedir } = require('os')
 
 
 const TRUTHY_VALUES = [null, true, 'true', 1, '1']
@@ -25,5 +26,13 @@ exports.number = function coerceNumber(value) {
 }
 
 exports.path = function coercePath(value) {
-  return (typeof value === 'string') ? resolve(value) : value
+  if (typeof value === 'string') {
+    if (value[0] === '~') {
+      value = join(homedir(), value.slice(1))
+    }
+
+    return resolve(value)
+  }
+
+  return value
 }
