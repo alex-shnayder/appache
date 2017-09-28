@@ -1,4 +1,5 @@
 const objectPathImmutable = require('object-path-immutable')
+const wildcardMatch = require('wildcard-match')
 
 
 class InputError extends Error {}
@@ -171,7 +172,7 @@ function optionsToObject(options) {
   }, {})
 }
 
-function compareNames(nameA, nameB) {
+function compareNames(nameA, nameB, allowWildcards) {
   nameA = (typeof nameA === 'string') ? [nameA] : nameA
   nameB = (typeof nameB === 'string') ? [nameB] : nameB
 
@@ -179,8 +180,12 @@ function compareNames(nameA, nameB) {
     throw new Error('A name must be an array or a string')
   }
 
-  return (nameA.length === nameB.length &&
-          nameA.every((n, i) => nameB[i] === n))
+  if (allowWildcards) {
+    return wildcardMatch(nameA, nameB)
+  } else {
+    return nameA.length === nameB.length &&
+      nameA.every((n, i) => nameB[i] === n)
+  }
 }
 
 function getCommandFromEvent(event) {

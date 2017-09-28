@@ -36,6 +36,7 @@
     "camelcase": "^4.1.0",
     "hooter": "^0.20.0",
     "object-path-immutable": "^0.5.1",
-    "read-pkg-up": "^2.0.0"
+    "read-pkg-up": "^2.0.0",
+    "wildcard-match": "^1.1.0"
   }
 }
