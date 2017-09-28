@@ -11,9 +11,9 @@ describe('processTitle plugin', () => {
     assert.deepStrictEqual(value, {
       effect: 'hook',
       event: 'config',
-      priority: 'start',
+      priority: 'end',
       fn: setProcessTitle,
-      routineMode: 'pre',
+      routineMode: 'post',
     })
   })
 
@@ -31,7 +31,7 @@ describe('processTitle plugin', () => {
       }
 
       let originalTitle = process.title
-      setProcessTitle({}, config)
+      setProcessTitle(config)
       assert(process.title === 'bar')
       process.title = originalTitle
     })
@@ -47,9 +47,16 @@ describe('processTitle plugin', () => {
 
       let originalTitle = process.title
       process.title = 'baz'
-      setProcessTitle({}, config)
+      setProcessTitle(config)
       assert(process.title === 'baz')
       process.title = originalTitle
+    })
+
+    it('returns the config', () => {
+      let config = {}
+      let result = setProcessTitle(config)
+
+      assert(result === config)
     })
   })
 })
