@@ -31,11 +31,11 @@
     "mocha": "^3.5.0"
   },
   "dependencies": {
-    "ajv": "^5.2.2",
+    "ajv": "^5.2.3",
     "ajv-keywords": "^2.1.0",
     "camelcase": "^4.1.0",
-    "hooter": "^0.20.0",
-    "object-path-immutable": "^0.5.1",
+    "hooter": "^0.21.0",
+    "object-path-immutable": "^0.5.2",
     "read-pkg-up": "^2.0.0",
     "wildcard-match": "^1.1.0"
   }
