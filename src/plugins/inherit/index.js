@@ -1,22 +1,22 @@
-const { next, hook, hookStart } = require('hooter/effects')
+const { preHook, preHookStart } = require('hooter/effects')
 const modifySchema = require('./modifySchema')
 const shareOptionValues = require('./shareOptionValues')
 const inherit = require('./inherit')
 
 
 module.exports = function* inheritPlugin() {
-  yield hook('schema', function* (schema) {
+  yield preHook('schema', (schema) => {
     schema = modifySchema(schema)
-    return yield next(schema)
+    return [schema]
   })
 
-  yield hookStart('config', function* (schema, config) {
+  yield preHookStart('config', (schema, config) => {
     config = inherit(schema, config)
-    return yield next(schema, config)
+    return [schema, config]
   })
 
-  yield hook('execute', function* (_, request) {
+  yield preHook('execute', (_, request) => {
     request = shareOptionValues(request)
-    return yield next(_, request)
+    return [_, request]
   })
 }

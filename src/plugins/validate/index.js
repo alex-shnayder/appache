@@ -1,16 +1,15 @@
-const { next, hook } = require('hooter/effects')
+const { preHook } = require('hooter/effects')
 const modifySchema = require('./modifySchema')
 const validateCommand = require('./validateCommand')
 
 
 module.exports = function* validatePlugin() {
-  yield hook('schema', function* (schema) {
+  yield preHook('schema', (schema) => {
     schema = modifySchema(schema)
-    return yield next(schema)
+    return [schema]
   })
 
-  yield hook('process', function* (_, command) {
+  yield preHook('process', (_, command) => {
     validateCommand(command)
-    return yield next(_, command)
   })
 }

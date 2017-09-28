@@ -1,5 +1,5 @@
 const assert = require('assert')
-const { configHandler, setProcessTitle } = require('./index?private')
+const { setProcessTitle } = require('./index?private')
 const processTitlePlugin = require('./index')
 
 
@@ -12,41 +12,8 @@ describe('processTitle plugin', () => {
       effect: 'hook',
       event: 'config',
       priority: 'start',
-      fn: configHandler,
-      routineMode: 'default',
-    })
-  })
-
-  describe('config handler', () => {
-    let schema = {}
-    let config = {}
-    let generator = configHandler(schema, config)
-
-    it('calls setProcessTitle', () => {
-      let { value } = generator.next()
-
-      assert.deepStrictEqual(value, {
-        effect: 'call',
-        fn: setProcessTitle,
-        args: [config],
-      })
-    })
-
-    it('yields "next"', () => {
-      let { value } = generator.next()
-
-      assert.deepStrictEqual(value, {
-        effect: 'next',
-        args: [schema, config],
-      })
-    })
-
-    it('returns the result', () => {
-      let result = {}
-      let { value, done } = generator.next(result)
-
-      assert(value === result)
-      assert(done)
+      fn: setProcessTitle,
+      routineMode: 'pre',
     })
   })
 
@@ -64,7 +31,7 @@ describe('processTitle plugin', () => {
       }
 
       let originalTitle = process.title
-      setProcessTitle(config)
+      setProcessTitle({}, config)
       assert(process.title === 'bar')
       process.title = originalTitle
     })
@@ -80,7 +47,7 @@ describe('processTitle plugin', () => {
 
       let originalTitle = process.title
       process.title = 'baz'
-      setProcessTitle(config)
+      setProcessTitle({}, config)
       assert(process.title === 'baz')
       process.title = originalTitle
     })

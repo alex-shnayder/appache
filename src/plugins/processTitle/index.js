@@ -1,8 +1,8 @@
-const { next, hookStart, call } = require('hooter/effects')
+const { preHookStart } = require('hooter/effects')
 const { findDefaultCommand } = require('../../common')
 
 
-function setProcessTitle(config) {
+function setProcessTitle(schema, config) {
   let command = findDefaultCommand(config)
 
   if (command) {
@@ -10,11 +10,6 @@ function setProcessTitle(config) {
   }
 }
 
-function* configHandler(schema, config) {
-  yield call(setProcessTitle, config)
-  return yield next(schema, config)
-}
-
 module.exports = function* processTitlePlugin() {
-  yield hookStart('config', configHandler)
+  yield preHookStart('config', setProcessTitle)
 }

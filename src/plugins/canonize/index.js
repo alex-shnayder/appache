@@ -1,4 +1,4 @@
-const { next, hookEnd, call } = require('hooter/effects')
+const { preHookEnd, call } = require('hooter/effects')
 
 
 function canonize(command) {
@@ -22,9 +22,9 @@ function canonize(command) {
 
 function* processHandler(config, command, ...args) {
   command = yield call(canonize, command)
-  return yield next(config, command, ...args)
+  return [config, command, ...args]
 }
 
 module.exports = function* canonizePlugin() {
-  yield hookEnd('process', processHandler)
+  yield preHookEnd('process', processHandler)
 }

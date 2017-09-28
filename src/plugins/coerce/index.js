@@ -1,4 +1,4 @@
-const { next, hook } = require('hooter/effects')
+const { preHook } = require('hooter/effects')
 const modifySchema = require('./modifySchema')
 
 
@@ -14,12 +14,12 @@ function coerceOption(option) {
 }
 
 module.exports = function* coercePlugin() {
-  yield hook('schema', function* (schema) {
+  yield preHook('schema', (schema) => {
     schema = modifySchema(schema)
-    return yield next(schema)
+    return [schema]
   })
 
-  yield hook('process', function* (_, command, ...args) {
+  yield preHook('process', (_, command, ...args) => {
     let options = command.options
 
     if (options) {
@@ -27,6 +27,6 @@ module.exports = function* coercePlugin() {
       command.options = options.map((option) => coerceOption(option))
     }
 
-    return yield next(_, command, ...args)
+    return [_, command, ...args]
   })
 }

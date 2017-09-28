@@ -1,18 +1,15 @@
-const { next, hook, hookStart } = require('hooter/effects')
+const { preHook, preHookStart } = require('hooter/effects')
 const modifySchema = require('./modifySchema')
 
 
 module.exports = function* defaultValuesPlugin() {
-  yield hook('schema', function* (schema) {
-    schema = modifySchema(schema)
-    return yield next(schema)
-  })
+  yield preHook('schema', (schema) => [modifySchema(schema)])
 
-  yield hookStart('process', function* (_, command, ...args) {
+  yield preHookStart('process', (_, command, ...args) => {
     let config = command.config
 
     if (!config || !config.options || !config.options.length) {
-      return yield next(_, command, ...args)
+      return [_, command, ...args]
     }
 
     let options = command.options.slice()
@@ -42,6 +39,6 @@ module.exports = function* defaultValuesPlugin() {
     })
 
     command = Object.assign({}, command, { options })
-    return yield next(_, command, ...args)
+    return [_, command, ...args]
   })
 }

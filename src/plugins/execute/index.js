@@ -1,5 +1,5 @@
 const {
-  next, suspend, getResume, toot, hookStart, hookEnd, hookResult,
+  suspend, getResume, toot, hookEnd, hookResult, preHookStart,
 } = require('hooter/effects')
 const preprocessRequest = require('./preprocessRequest')
 
@@ -30,7 +30,7 @@ function handleCb(config, command, context) {
 module.exports = function* executePlugin() {
   let config = yield hookResult('config')
 
-  yield hookStart('execute', function* (request) {
+  yield preHookStart('execute', function(request) {
     let _config = config.value
 
     if (!_config) {
@@ -41,7 +41,7 @@ module.exports = function* executePlugin() {
 
     this.source = this.tooter
     request = preprocessRequest(request, _config)
-    return yield next(_config, request)
+    return [_config, request]
   })
 
   yield hookEnd('execute', function* (config, request) {

@@ -1,4 +1,4 @@
-const { next, hook, hookEnd } = require('hooter/effects')
+const { next, preHook, hookEnd } = require('hooter/effects')
 const readPkgUp = require('read-pkg-up')
 const { createOption } = require('../../common')
 const modifySchema = require('./modifySchema')
@@ -51,14 +51,14 @@ function injectOptions(schema, config) {
 }
 
 module.exports = function* versionPlugin() {
-  yield hook('schema', function* (schema) {
+  yield preHook('schema', (schema) => {
     schema = modifySchema(schema)
-    return yield next(schema)
+    return [schema]
   })
 
-  yield hook('config', function* (schema, config, ...args) {
+  yield preHook('config', (schema, config, ...args) => {
     config = injectOptions(schema, config)
-    return yield next(schema, config, ...args)
+    return [schema, config, ...args]
   })
 
   yield hookEnd('process', function* (_, command, ...args) {

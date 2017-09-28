@@ -13,7 +13,7 @@ describe('camelize plugin', () => {
       event: 'process',
       priority: 'end',
       fn: processHandler,
-      routineMode: 'default',
+      routineMode: 'pre',
     })
   })
 
@@ -32,21 +32,12 @@ describe('camelize plugin', () => {
       })
     })
 
-    it('yields "next" with the camelized command', () => {
-      let camelizedCommand = {}
-      let { value } = generator.next(camelizedCommand)
+    it('returns the modified args', () => {
+      let newCommand = {}
+      let result = [config, newCommand]
+      let { value, done } = generator.next(newCommand)
 
-      assert.deepStrictEqual(value, {
-        effect: 'next',
-        args: [config, camelizedCommand],
-      })
-    })
-
-    it('returns the result', () => {
-      let result = {}
-      let { value, done } = generator.next(result)
-
-      assert(value === result)
+      assert.deepStrictEqual(value, result)
       assert(done)
     })
   })

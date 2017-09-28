@@ -1,12 +1,12 @@
-const { next, hook, hookEnd } = require('hooter/effects')
+const { preHook, hookEnd } = require('hooter/effects')
 const assignDefaults = require('./assignDefaults')
 const validateConfig = require('./validateConfig')
 
 
 module.exports = function* configPlugin() {
-  yield hook('config', function* (schema, config) {
+  yield preHook('config', (schema, config) => {
     config = assignDefaults(schema, config)
-    return yield next(schema, config)
+    return [schema, config]
   })
 
   yield hookEnd('config', (schema, config) => {
