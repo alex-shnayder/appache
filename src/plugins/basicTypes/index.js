@@ -41,7 +41,7 @@ function modifyOptions(options) {
   })
 }
 
-module.exports = function* typesPlugin() {
+module.exports = function* basicTypesPlugin() {
   yield hook('config', function* (schema, config, ...args) {
     let { options } = config
 

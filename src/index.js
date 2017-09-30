@@ -20,7 +20,7 @@ const defaultPlugins = {
   require: require('./plugins/require'),
   coerce: require('./plugins/coerce'),
   validate: require('./plugins/validate'),
-  types: require('./plugins/types'),
+  basicTypes: require('./plugins/basicTypes'),
   camelize: require('./plugins/camelize'),
   canonize: require('./plugins/canonize'),
   defaultValues: require('./plugins/defaultValues'),
