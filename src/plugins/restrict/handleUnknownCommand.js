@@ -1,4 +1,4 @@
-const { InputError, findCommandByFullName } = require('../../common')
+const { InputError } = require('../../common')
 const findLevenshtein = require('./findLevenshtein')
 
 
@@ -26,12 +26,10 @@ function suggestCommand(inputCommand, commands) {
   return suggested
 }
 
-module.exports = function handleUnknownCommand(config, command) {
+module.exports = function handleUnknownCommand(command, parentConfig) {
   let { fullName, inputName } = command
   let name = fullName[fullName.length - 1]
-  let parentFullName = fullName.slice(0, -1)
-  let parentCommand = findCommandByFullName(config, parentFullName, true)
-  let siblings = parentCommand.commands
+  let siblings = parentConfig && parentConfig.commands
   let errText = `Unknown command "${inputName}"`
 
   if (siblings && siblings.length) {

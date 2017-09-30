@@ -16,7 +16,7 @@ const corePlugins = {
 const defaultPlugins = {
   version: require('./plugins/version'),
   help: require('./plugins/help'),
-  unknownCommands: require('./plugins/unknownCommands'),
+  restrict: require('./plugins/restrict'),
   require: require('./plugins/require'),
   coerce: require('./plugins/coerce'),
   validate: require('./plugins/validate'),

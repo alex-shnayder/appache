@@ -1,7 +1,21 @@
 const { preHook } = require('hooter/effects')
+const { InputError } = require('../../common')
 const modifySchema = require('./modifySchema')
-const validateCommandOptions = require('./validateCommandOptions')
 
+
+function validateCommand(commandConfig, options) {
+  commandConfig.options.forEach((optionConfig) => {
+    if (optionConfig.required) {
+      let option = options.find((option) => {
+        return option.config && option.config.id === optionConfig.id
+      })
+
+      if (!option || option.value === null) {
+        throw new InputError(`Option "${optionConfig.name}" is required`)
+      }
+    }
+  })
+}
 
 module.exports = function* requirePlugin() {
   yield preHook('schema', (schema) => {
@@ -9,9 +23,9 @@ module.exports = function* requirePlugin() {
     return [schema]
   })
 
-  yield preHook('process', (config, command) => {
-    if (command.config) {
-      validateCommandOptions(command)
+  yield preHook('process', (_, { config, options }) => {
+    if (config && config.options && config.options.length) {
+      validateCommand(config, options)
     }
   })
 }

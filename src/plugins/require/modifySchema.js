@@ -1,12 +1,5 @@
-const { assign, push } = require('../../common')
+const { assign } = require('../../common')
 
-
-const COMMAND_PROPERTIES = {
-  strict: {
-    type: 'boolean',
-    default: false,
-  },
-}
 
 const OPTION_PROPERTIES = {
   required: {
@@ -17,8 +10,6 @@ const OPTION_PROPERTIES = {
 
 
 module.exports = function modifySchema(schema) {
-  schema = assign(schema, 'definitions.command.properties', COMMAND_PROPERTIES)
-  schema = push(schema, 'definitions.command.properties.inheritableSettings.default', 'strict')
   schema = assign(schema, 'definitions.option.properties', OPTION_PROPERTIES)
   return schema
 }
