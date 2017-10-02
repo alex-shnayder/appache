@@ -26,11 +26,9 @@ module.exports = function appache(plugins) {
     throw new Error('Plugins must be an array of functions')
   }
 
-  plugins.forEach((plugin) => {
-    let boundLifecycle = lifecycle.bind(plugin)
-    plugin = boundLifecycle.wrap(plugin)
-    plugin(boundLifecycle)
-  })
+  lifecycle
+    .plug(plugins)
+    .forEach((plugin) => plugin())
 
   return lifecycle.toot('init')
 }
