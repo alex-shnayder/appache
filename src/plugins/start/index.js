@@ -16,3 +16,5 @@ module.exports = function* startPlugin() {
     return yield toot('activate', config)
   })
 }
+
+module.exports.tags = ['core']

@@ -14,3 +14,5 @@ module.exports = function* configPlugin() {
     return config
   })
 }
+
+module.exports.tags = ['core']

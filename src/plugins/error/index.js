@@ -33,3 +33,5 @@ module.exports = function* errorPlugin() {
   yield hookStart('error', errorStartHandler)
   yield hookEnd('error', errorEndHandler)
 }
+
+module.exports.tags = ['core']

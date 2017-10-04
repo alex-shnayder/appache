@@ -80,3 +80,5 @@ module.exports = function* executePlugin() {
     return context
   })
 }
+
+module.exports.tags = ['core']

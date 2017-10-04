@@ -20,3 +20,5 @@ module.exports = function* inheritPlugin() {
     return [_, request]
   })
 }
+
+module.exports.tags = ['core']
