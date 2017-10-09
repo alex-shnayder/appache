@@ -1,5 +1,5 @@
 const {
-  next, hookStart, hookEnd, hookResult, preHookStart, call,
+  next, hook, hookStart, hookEnd, preHookStart, call,
 } = require('hooter/effects')
 
 
@@ -27,7 +27,7 @@ function* errorEndHandler(config, err, ...args) {
 }
 
 module.exports = function* errorPlugin() {
-  let config = yield hookResult('config')
+  let config = yield hook('config')
 
   yield preHookStart('error', (...args) => [config.value, ...args])
   yield hookStart('error', errorStartHandler)
