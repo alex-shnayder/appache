@@ -19,7 +19,11 @@ module.exports = function* coercePlugin() {
     return [schema]
   })
 
-  yield preHook('process', (_, command, ...args) => {
+  yield preHook({
+    event: 'process',
+    goesAfter: ['owner:defaultValuesPlugin'],
+    goesBefore: ['owner:validatePlugin'],
+  }, (_, command, ...args) => {
     let options = command.options
 
     if (options) {

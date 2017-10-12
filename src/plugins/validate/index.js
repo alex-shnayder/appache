@@ -9,7 +9,10 @@ module.exports = function* validatePlugin() {
     return [schema]
   })
 
-  yield preHook('process', (_, command) => {
+  yield preHook({
+    event: 'process',
+    goesAfter: ['defaultValuesPlugin'],
+  }, (_, command) => {
     validateCommand(command)
   })
 }
