@@ -1,6 +1,7 @@
 const { preHook, hookEnd } = require('hooter/effects')
 const assignDefaults = require('./assignDefaults')
 const validateConfig = require('./validateConfig')
+const finalizeConfig = require('./finalizeConfig')
 
 
 module.exports = function* config() {
@@ -10,6 +11,7 @@ module.exports = function* config() {
   })
 
   yield hookEnd('config', (schema, config) => {
+    config = finalizeConfig(schema, config)
     validateConfig(schema, config)
     return config
   })

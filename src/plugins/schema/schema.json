@@ -80,6 +80,9 @@
 
   "type": "object",
   "properties": {
+    "final": {
+      "type": "boolean"
+    },
     "commands": {
       "type": "array",
       "uniqueItems": true,
