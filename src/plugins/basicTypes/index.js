@@ -1,56 +1,50 @@
-const { next, hook } = require('hooter/effects')
+const { preHook } = require('hooter/effects')
 const { InputError } = require('../../common')
 const coercers = require('./coercers')
 
 
 const TYPES = ['string', 'boolean', 'number', 'function']
-const CONSUME_BY_TYPE = {
-  boolean: false,
-}
 
 
-let validators = TYPES.reduce((result, type) => {
-  result[type] = function validateBasicType({ inputName, value }) {
-    if (typeof value !== type || Number.isNaN(value)) {
-      throw new InputError(
-        `The value of option "${inputName}" must be a ${type}`
-      )
-    }
+function processOption(option) {
+  let { config, value, inputName } = option
+
+  if (!config) {
+    return option
   }
-  return result
-}, {})
 
+  let { type } = config
 
-function modifyOptions(options) {
-  return options.map((option) => {
-    let { type, validate, coerce, consume } = option
+  if (!TYPES.includes(type)) {
+    return option
+  }
 
-    if (
-      !type ||
-      (validate && coerce && typeof consume !== 'undefined') ||
-      !TYPES.includes(type)
-    ) {
-      return option
-    }
+  if (coercers[type]) {
+    value = coercers[type](value)
+  }
 
-    consume = CONSUME_BY_TYPE[type]
-    validate = validators[type]
-    coerce = coercers[type]
+  if (typeof value !== type || Number.isNaN(value)) {
+    throw new InputError(
+      `The value of option "${inputName}" must be a ${type}`
+    )
+  }
 
-    return Object.assign({ validate, coerce, consume }, option)
-  })
+  return Object.assign({}, option, { value })
 }
 
 module.exports = function* basicTypesPlugin() {
-  yield hook('config', function* (schema, config, ...args) {
-    let { options } = config
+  yield preHook({
+    event: 'process',
+    goesBefore: ['owner:coercePlugin', 'owner:validatePlugin'],
+    goesAfter: ['owner:defaultValuesPlugin'],
+  }, (config, command) => {
+    let { options } = command
 
-    if (!options) {
-      return yield next(schema, config, ...args)
+    if (options) {
+      options = options.map(processOption)
     }
 
-    options = modifyOptions(options)
-    config = Object.assign({}, config, { options })
-    return yield next(schema, config, ...args)
+    command = Object.assign({}, command, { options })
+    return [config, command]
   })
 }
