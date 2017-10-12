@@ -23,7 +23,7 @@
           "type": "string",
           "minLength": 1
         },
-        "default": {
+        "root": {
           "type": "boolean"
         },
         "abstract": {

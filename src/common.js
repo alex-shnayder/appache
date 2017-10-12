@@ -86,6 +86,33 @@ function findDefaultCommand(config, populate) {
   return command
 }
 
+function findRootCommands(config, populate) {
+  if (!config || !config.commands) {
+    return []
+  }
+
+  let commands
+
+  if (config.final) {
+    commands = config.commands.filter((c) => c.root)
+  } else {
+    let nonRootCommands = config.commands.reduce((results, command) => {
+      command.commands && command.commands.forEach((id) => {
+        nonRootCommands[id] = true
+      })
+      return results
+    }, {})
+
+    commands = commands.filter((command) => !nonRootCommands[command.id])
+  }
+
+  if (populate) {
+    commands = commands.map((c) => populateCommand(config, c))
+  }
+
+  return commands
+}
+
 function populateCommand(config, command) {
   let { options, commands } = command
 
@@ -224,9 +251,10 @@ function createOption(schema, option) {
 
 module.exports = {
   InputError, findByIds, findOneById, findOneByNames, findCommandById,
-  findOptionById, findCommandByFullName, findDefaultCommand, populateCommand,
-  updateCommandById, updateOptionById, optionsToObject, compareNames,
-  getCommandFromEvent, assignDefaults, createCommand, createOption,
+  findOptionById, findCommandByFullName, findDefaultCommand, findRootCommands,
+  populateCommand, updateCommandById, updateOptionById, optionsToObject,
+  compareNames, getCommandFromEvent, assignDefaults, createCommand,
+  createOption,
 }
 
 Object.assign(module.exports, objectPathImmutable)
