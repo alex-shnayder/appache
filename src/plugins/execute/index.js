@@ -27,7 +27,7 @@ function handleCb(config, command, context) {
 }
 
 
-module.exports = function* executePlugin() {
+module.exports = function* execute() {
   let config = yield hook('config')
 
   yield preHookStart('execute', function(request) {

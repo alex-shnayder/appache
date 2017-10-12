@@ -26,7 +26,7 @@ function* errorEndHandler(config, err, ...args) {
   return result
 }
 
-module.exports = function* errorPlugin() {
+module.exports = function* error() {
   let config = yield hook('config')
 
   yield preHookStart('error', (...args) => [config.value, ...args])

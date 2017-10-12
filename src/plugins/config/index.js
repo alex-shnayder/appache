@@ -3,7 +3,7 @@ const assignDefaults = require('./assignDefaults')
 const validateConfig = require('./validateConfig')
 
 
-module.exports = function* configPlugin() {
+module.exports = function* config() {
   yield preHook('config', (schema, config) => {
     config = assignDefaults(schema, config)
     return [schema, config]

@@ -2,7 +2,7 @@ const { preHook, preHookStart } = require('hooter/effects')
 const modifySchema = require('./modifySchema')
 
 
-module.exports = function* defaultValuesPlugin() {
+module.exports = function* defaultValues() {
   yield preHook('schema', (schema) => [modifySchema(schema)])
 
   yield preHookStart('process', (_, command, ...args) => {

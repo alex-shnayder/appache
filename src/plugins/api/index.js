@@ -3,7 +3,7 @@ const { preHookEnd } = require('hooter/effects')
 
 const TAGS = ['api']
 
-module.exports = function* apiPlugin(lifecycle) {
+module.exports = function* api(lifecycle) {
   yield preHookEnd({
     event: 'init',
     tags: TAGS,

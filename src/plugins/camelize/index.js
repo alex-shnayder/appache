@@ -22,6 +22,6 @@ function* processHandler(_, command, ...args) {
   return [_, command, ...args]
 }
 
-module.exports = function* camelizePlugin() {
+module.exports = function* camelize() {
   yield preHookEnd('process', processHandler)
 }

@@ -50,7 +50,7 @@ function injectOptions(schema, config) {
   return Object.assign({}, config, { commands, options })
 }
 
-module.exports = function* versionPlugin() {
+module.exports = function* version() {
   yield preHook('schema', (schema) => {
     schema = modifySchema(schema)
     return [schema]

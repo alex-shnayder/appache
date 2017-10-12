@@ -25,6 +25,6 @@ function* processHandler(config, command, ...args) {
   return [config, command, ...args]
 }
 
-module.exports = function* canonizePlugin() {
+module.exports = function* canonize() {
   yield preHookEnd('process', processHandler)
 }

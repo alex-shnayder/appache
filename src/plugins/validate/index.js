@@ -3,7 +3,7 @@ const modifySchema = require('./modifySchema')
 const validateCommand = require('./validateCommand')
 
 
-module.exports = function* validatePlugin() {
+module.exports = function* validate() {
   yield preHook('schema', (schema) => {
     schema = modifySchema(schema)
     return [schema]
@@ -11,7 +11,7 @@ module.exports = function* validatePlugin() {
 
   yield preHook({
     event: 'process',
-    goesAfter: ['defaultValuesPlugin'],
+    goesAfter: ['defaultValues'],
   }, (_, command) => {
     validateCommand(command)
   })

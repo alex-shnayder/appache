@@ -12,7 +12,7 @@ function validateCommandOptions(options) {
   }
 }
 
-module.exports = function* restrictPlugin() {
+module.exports = function* restrict() {
   yield preHook('schema', (schema) => {
     schema = modifySchema(schema)
     return [schema]

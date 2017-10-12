@@ -1,17 +1,17 @@
 const { preHook, preHookStart } = require('hooter/effects')
 const modifySchema = require('./modifySchema')
 const shareOptionValues = require('./shareOptionValues')
-const inherit = require('./inherit')
+const addInheritance = require('./addInheritance')
 
 
-module.exports = function* inheritPlugin() {
+module.exports = function* inherit() {
   yield preHook('schema', (schema) => {
     schema = modifySchema(schema)
     return [schema]
   })
 
   yield preHookStart('config', (schema, config) => {
-    config = inherit(schema, config)
+    config = addInheritance(schema, config)
     return [schema, config]
   })
 

@@ -32,11 +32,11 @@ function processOption(option) {
   return Object.assign({}, option, { value })
 }
 
-module.exports = function* basicTypesPlugin() {
+module.exports = function* basicTypes() {
   yield preHook({
     event: 'process',
-    goesBefore: ['owner:coercePlugin', 'owner:validatePlugin'],
-    goesAfter: ['owner:defaultValuesPlugin'],
+    goesBefore: ['owner:coerce', 'owner:validate'],
+    goesAfter: ['owner:defaultValues'],
   }, (config, command) => {
     let { options } = command
 

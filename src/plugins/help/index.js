@@ -41,7 +41,7 @@ function injectOptions(schema, config) {
   return Object.assign({}, config, { commands, options })
 }
 
-module.exports = function* helpPlugin() {
+module.exports = function* help() {
   yield preHook('schema', (schema) => {
     schema = modifySchema(schema)
     return [schema]

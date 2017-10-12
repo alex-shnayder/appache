@@ -17,7 +17,7 @@ function validateCommand(commandConfig, options) {
   })
 }
 
-module.exports = function* requirePlugin() {
+module.exports = function* require() {
   yield preHook('schema', (schema) => {
     schema = modifySchema(schema)
     return [schema]

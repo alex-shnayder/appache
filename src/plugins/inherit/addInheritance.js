@@ -45,7 +45,7 @@ function inheritCommandSettings(
   return config
 }
 
-module.exports = function inherit(schema, config) {
+module.exports = function addInheritance(schema, config) {
   let command = findDefaultCommand(config)
 
   if (command && command.commands && command.commands.length) {

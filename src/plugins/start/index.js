@@ -3,7 +3,7 @@ const {
 } = require('hooter/effects')
 
 
-module.exports = function* startPlugin() {
+module.exports = function* start() {
   let schema = yield hook('schema')
   let config
 

@@ -1,7 +1,7 @@
 const { preHookStart, hookEnd, toot } = require('hooter/effects')
 
 
-module.exports = function* initPlugin() {
+module.exports = function* init() {
   yield preHookStart('init', function* () {
     let schema = yield toot('schema')
     return [schema]
