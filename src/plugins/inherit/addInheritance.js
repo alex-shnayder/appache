@@ -1,5 +1,5 @@
 const {
-  findDefaultCommand, updateCommandById, populateCommand,
+  findRootCommands, updateCommandById, populateCommand,
 } = require('../../common')
 
 
@@ -46,10 +46,12 @@ function inheritCommandSettings(
 }
 
 module.exports = function addInheritance(schema, config) {
-  let command = findDefaultCommand(config)
+  let commands = findRootCommands(config)
 
-  if (command && command.commands && command.commands.length) {
-    config = inheritCommandSettings(config, command)
+  if (commands.length) {
+    commands.forEach((command) => {
+      config = inheritCommandSettings(config, command)
+    })
   }
 
   return config
