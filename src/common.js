@@ -72,20 +72,6 @@ function findCommandByFullName(config, fullName, populate) {
   return command
 }
 
-function findDefaultCommand(config, populate) {
-  if (!config || !config.commands) {
-    return
-  }
-
-  let command = config.commands.find((c) => c.default)
-
-  if (command && populate) {
-    return populateCommand(config, command)
-  }
-
-  return command
-}
-
 function findRootCommands(config, populate) {
   if (!config || !config.commands) {
     return []
@@ -251,9 +237,9 @@ function createOption(schema, option) {
 
 module.exports = {
   InputError, findByIds, findOneById, findOneByNames, findCommandById,
-  findOptionById, findCommandByFullName, findDefaultCommand, findRootCommands,
-  populateCommand, updateCommandById, updateOptionById, optionsToObject,
-  compareNames, getCommandFromEvent, assignDefaults, createCommand,
+  findOptionById, findCommandByFullName, findRootCommands, populateCommand,
+  updateCommandById, updateOptionById, optionsToObject, compareNames,
+  getCommandFromEvent, assignDefaults, createCommand,
   createOption,
 }
 
