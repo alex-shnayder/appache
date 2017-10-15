@@ -84,12 +84,12 @@ function findRootCommands(config, populate) {
   } else {
     let nonRootCommands = config.commands.reduce((results, command) => {
       command.commands && command.commands.forEach((id) => {
-        nonRootCommands[id] = true
+        results[id] = true
       })
       return results
     }, {})
 
-    commands = commands.filter((command) => !nonRootCommands[command.id])
+    commands = config.commands.filter((command) => !nonRootCommands[command.id])
   }
 
   if (populate) {
