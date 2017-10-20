@@ -13,12 +13,18 @@ function validateCommandOptions(options) {
 }
 
 module.exports = function* restrict() {
-  yield preHook('schema', (schema) => {
+  yield preHook({
+    event: 'schema',
+    tags: ['modifySchema', 'modifyCommandSchema'],
+  }, (schema) => {
     schema = modifySchema(schema)
     return [schema]
   })
 
-  yield preHook('process', (config, command) => {
+  yield preHook({
+    event: 'process',
+    goesAfter: ['modifyCommand', 'modifyOption'],
+  }, (config, command) => {
     let { fullName, options, config: commandConfig } = command
 
     if (!commandConfig) {

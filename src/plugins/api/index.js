@@ -1,12 +1,13 @@
-const { preHookEnd } = require('hooter/effects')
+const { preHook } = require('hooter/effects')
 
 
 const TAGS = ['api']
 
 module.exports = function* api(lifecycle) {
-  yield preHookEnd({
+  yield preHook({
     event: 'init',
     tags: TAGS,
+    goesAfter: TAGS,
   }, (schema, result) => [schema, result || lifecycle])
 }
 

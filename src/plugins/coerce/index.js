@@ -14,15 +14,17 @@ function coerceOption(option) {
 }
 
 module.exports = function* coerce() {
-  yield preHook('schema', (schema) => {
+  yield preHook({
+    event: 'schema',
+    tags: ['modifySchema', 'modifyOptionSchema'],
+  }, (schema) => {
     schema = modifySchema(schema)
     return [schema]
   })
 
   yield preHook({
     event: 'process',
-    goesAfter: ['owner:defaultValues'],
-    goesBefore: ['owner:validate'],
+    tags: ['modifyCommand', 'modifyOption'],
   }, (_, command, ...args) => {
     let options = command.options
 

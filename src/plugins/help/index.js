@@ -42,12 +42,18 @@ function injectOptions(schema, config) {
 }
 
 module.exports = function* help() {
-  yield preHook('schema', (schema) => {
+  yield preHook({
+    event: 'schema',
+    tags: ['modifySchema', 'modifyCommandSchema'],
+  }, (schema) => {
     schema = modifySchema(schema)
     return [schema]
   })
 
-  yield preHook('config', (schema, config) => {
+  yield preHook({
+    event: 'config',
+    tags: ['modifyConfig', 'modifyCommandConfig', 'createOptionConfig'],
+  }, (schema, config) => {
     config = injectOptions(schema, config)
     return [schema, config]
   })

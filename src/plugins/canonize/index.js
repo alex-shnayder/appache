@@ -1,4 +1,4 @@
-const { preHookEnd, call } = require('hooter/effects')
+const { preHook, call } = require('hooter/effects')
 
 
 function canonize(command) {
@@ -26,5 +26,8 @@ function* processHandler(config, command, ...args) {
 }
 
 module.exports = function* canonize() {
-  yield preHookEnd('process', processHandler)
+  yield preHook({
+    event: 'process',
+    tags: ['modifyCommand', 'modifyOption'],
+  }, processHandler)
 }

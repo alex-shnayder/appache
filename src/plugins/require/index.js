@@ -18,12 +18,18 @@ function validateCommand(commandConfig, options) {
 }
 
 module.exports = function* require() {
-  yield preHook('schema', (schema) => {
+  yield preHook({
+    event: 'schema',
+    tags: ['modifySchema', 'modifyOptionSchema'],
+  }, (schema) => {
     schema = modifySchema(schema)
     return [schema]
   })
 
-  yield preHook('process', (_, { config, options }) => {
+  yield preHook({
+    event: 'process',
+    goesAfter: ['modifyOption'],
+  }, (_, { config, options }) => {
     if (config && config.options && config.options.length) {
       validateCommand(config, options)
     }

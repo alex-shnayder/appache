@@ -1,11 +1,18 @@
-const { preHook, preHookStart } = require('hooter/effects')
+const { preHook } = require('hooter/effects')
 const modifySchema = require('./modifySchema')
 
 
 module.exports = function* defaultValues() {
-  yield preHook('schema', (schema) => [modifySchema(schema)])
+  yield preHook({
+    event: 'schema',
+    tags: ['modifySchema'],
+  }, (schema) => [modifySchema(schema)])
 
-  yield preHookStart('process', (_, command, ...args) => {
+  yield preHook({
+    event: 'process',
+    tags: ['modifyCommand', 'modifyOption'],
+    goesBefore: ['modifyOption'],
+  }, (_, command, ...args) => {
     let config = command.config
 
     if (!config || !config.options || !config.options.length) {

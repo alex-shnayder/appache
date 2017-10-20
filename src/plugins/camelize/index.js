@@ -1,5 +1,5 @@
 const camelcase = require('camelcase')
-const { preHookEnd, call } = require('hooter/effects')
+const { preHook, call } = require('hooter/effects')
 
 
 function camelizeOptions(command) {
@@ -23,5 +23,9 @@ function* processHandler(_, command, ...args) {
 }
 
 module.exports = function* camelize() {
-  yield preHookEnd('process', processHandler)
+  yield preHook({
+    event: 'process',
+    tags: ['modifyCommand', 'modifyOption'],
+    goesAfter: ['modifyOption'],
+  }, processHandler)
 }
