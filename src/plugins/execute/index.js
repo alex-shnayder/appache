@@ -1,6 +1,7 @@
 const {
   suspend, getResume, toot, hook, hookEnd, preHookStart,
 } = require('hooter/effects')
+const { InputError } = require('../../common')
 const preprocessRequest = require('./preprocessRequest')
 
 
@@ -20,6 +21,17 @@ function* processCb(_, command) {
   let resume = yield getResume()
   let result = new ProcessingResult(command, resume)
   return yield suspend(result)
+}
+
+function dontHandleAbstractCommand(_, command) {
+  if (command.config && command.config.abstract) {
+    let err = new InputError(
+      `Command "${command.inputName}" cannot be used directly. ` +
+      'Please specify a subcommand'
+    )
+    err.command = command
+    throw err
+  }
 }
 
 function handleCb(config, command, context) {
@@ -79,6 +91,8 @@ module.exports = function* execute() {
 
     return context
   })
+
+  yield preHookStart('handle', dontHandleAbstractCommand)
 }
 
 module.exports.tags = ['core']
