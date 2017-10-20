@@ -94,5 +94,3 @@ module.exports = function* execute() {
 
   yield preHookStart('handle', dontHandleAbstractCommand)
 }
-
-module.exports.tags = ['core']

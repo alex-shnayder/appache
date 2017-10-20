@@ -9,5 +9,3 @@ module.exports = function* init() {
 
   yield hookEnd('init', (schema, result) => result)
 }
-
-module.exports.tags = ['core']

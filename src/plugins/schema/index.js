@@ -6,5 +6,3 @@ module.exports = function* schema() {
   yield preHookStart('schema', () => [baseSchema])
   yield hookEnd('schema', (schema) => schema)
 }
-
-module.exports.tags = ['core']

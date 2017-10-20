@@ -29,5 +29,3 @@ module.exports = function* config() {
     return config
   })
 }
-
-module.exports.tags = ['core']

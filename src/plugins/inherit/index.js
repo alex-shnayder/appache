@@ -31,5 +31,3 @@ module.exports = function* inherit() {
     return [_, request]
   })
 }
-
-module.exports.tags = ['core']
