@@ -1,21 +1,53 @@
 const Hooter = require('hooter')
 
 
-const HOOTER_SETTINGS = {
-  events: {
-    schema: { mode: 'sync' },
-    init: { mode: 'sync' },
-    start: { mode: 'sync' },
-    activate: { mode: 'sync' },
-    deactivate: { mode: 'sync' },
-    stop: { mode: 'sync' },
-    config: { mode: 'sync' },
-    execute: { mode: 'async' },
-    process: { mode: 'async' },
-    handle: { mode: 'async' },
-    tap: { mode: 'async' },
-    error: { mode: 'sync' },
+const EVENTS = {
+  schema: {
+    mode: 'sync',
+    tags: ['modifySchema', 'modifyConfigSchema', 'modifyOptionSchema'],
   },
+  init: {
+    mode: 'sync',
+  },
+  start: {
+    mode: 'sync',
+  },
+  activate: {
+    mode: 'sync',
+  },
+  deactivate: {
+    mode: 'sync',
+  },
+  stop: {
+    mode: 'sync',
+  },
+  config: {
+    mode: 'sync',
+    tags: [
+      'modifyConfig', 'createCommandConfig', 'createOptionConfig',
+      'modifyCommandConfig', 'modifyOptionConfig',
+    ],
+  },
+  execute: {
+    mode: 'async',
+    tags: ['addCommand', 'modifyCommand', 'addOption', 'modifyOption'],
+  },
+  process: {
+    mode: 'async',
+    tags: ['modifyCommand', 'addOption', 'modifyOption'],
+  },
+  handle: {
+    mode: 'async',
+  },
+  tap: {
+    mode: 'async',
+  },
+  error: {
+    mode: 'sync',
+  },
+}
+const HOOTER_SETTINGS = {
+  events: EVENTS,
 }
 const CORE_PLUGIN_SETTINGS = {
   required: true,
