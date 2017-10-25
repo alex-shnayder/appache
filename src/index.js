@@ -11,7 +11,6 @@ const corePlugins = [
   require('./plugins/execute'),
 ]
 const defaultPlugins = [
-  require('./plugins/version'),
   require('./plugins/help'),
   require('./plugins/restrict'),
   require('./plugins/require'),
