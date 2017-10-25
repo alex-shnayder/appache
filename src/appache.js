@@ -1,4 +1,4 @@
-const Hooter = require('hooter')
+const Lifecycle = require('./lifecycle')
 
 
 const EVENTS = {
@@ -67,7 +67,7 @@ module.exports = function appache(corePlugins, plugins) {
     throw new Error('Plugins must be an array of functions')
   }
 
-  let lifecycle = new Hooter(HOOTER_SETTINGS)
+  let lifecycle = new Lifecycle(HOOTER_SETTINGS)
   lifecycle.plug(corePlugins, CORE_PLUGIN_SETTINGS)
   lifecycle.plug(plugins, PLUGIN_SETTINGS)
   lifecycle.start()
