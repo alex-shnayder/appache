@@ -1,0 +1,91 @@
+{
+  "schema": {
+    "mode": "sync",
+    "tags": {
+      "modifyCommandSchema": {
+        "implies": "modifySchema"
+      },
+      "modifyOptionSchema": {
+        "implies": "modifySchema"
+      }
+    }
+  },
+  "init": {
+    "mode": "sync"
+  },
+  "start": {
+    "mode": "sync"
+  },
+  "activate": {
+    "mode": "sync"
+  },
+  "deactivate": {
+    "mode": "sync"
+  },
+  "stop": {
+    "mode": "sync"
+  },
+  "config": {
+    "mode": "sync",
+    "tags": {
+      "modifyConfig": {
+        "goesAfter": "createConfig"
+      },
+      "createCommandConfig": {
+        "implies": "modifyConfig"
+      },
+      "modifyCommandConfig": {
+        "implies": "modifyConfig",
+        "goesAfter": "createCommandConfig"
+      },
+      "createOptionConfig": {
+        "implies": "modifyConfig"
+      },
+      "modifyOptionConfig": {
+        "implies": "modifyConfig",
+        "goesAfter": "createOptionConfig"
+      }
+    }
+  },
+  "execute": {
+    "mode": "async",
+    "tags": {
+      "modifyCommand": {
+        "goesAfter": "addCommand"
+      },
+      "addOption": {
+        "implies": "modifyCommand"
+      },
+      "modifyOption": {
+        "implies": "modifyCommand",
+        "goesAfter": "addOption"
+      }
+    }
+  },
+  "process": {
+    "mode": "async",
+    "tags": {
+      "addOption": {
+        "implies": "modifyCommand"
+      },
+      "modifyOption": {
+        "implies": "modifyCommand",
+        "goesAfter": "addOption"
+      }
+    }
+  },
+  "handle": {
+    "mode": "async",
+    "tags": {
+      "tapCommand": {
+        "goesAfter": "handleOption"
+      },
+      "handleCommand": {
+        "goesAfter": "handleOption"
+      }
+    }
+  },
+  "error": {
+    "mode": "sync"
+  }
+}

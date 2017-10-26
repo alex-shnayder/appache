@@ -1,52 +1,8 @@
 const Lifecycle = require('./lifecycle')
+const events = require('./events')
 
 
-const EVENTS = {
-  schema: {
-    mode: 'sync',
-    tags: ['modifySchema', 'modifyConfigSchema', 'modifyOptionSchema'],
-  },
-  init: {
-    mode: 'sync',
-  },
-  start: {
-    mode: 'sync',
-  },
-  activate: {
-    mode: 'sync',
-  },
-  deactivate: {
-    mode: 'sync',
-  },
-  stop: {
-    mode: 'sync',
-  },
-  config: {
-    mode: 'sync',
-    tags: [
-      'modifyConfig', 'createCommandConfig', 'createOptionConfig',
-      'modifyCommandConfig', 'modifyOptionConfig',
-    ],
-  },
-  execute: {
-    mode: 'async',
-    tags: ['addCommand', 'modifyCommand', 'addOption', 'modifyOption'],
-  },
-  process: {
-    mode: 'async',
-    tags: ['modifyCommand', 'addOption', 'modifyOption'],
-  },
-  handle: {
-    mode: 'async',
-    tags: ['handleOption', 'tapCommand', 'handleCommand'],
-  },
-  error: {
-    mode: 'sync',
-  },
-}
-const HOOTER_SETTINGS = {
-  events: EVENTS,
-}
+const HOOTER_SETTINGS = { events }
 const CORE_PLUGIN_SETTINGS = {
   required: true,
 }
