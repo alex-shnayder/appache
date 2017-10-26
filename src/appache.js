@@ -38,9 +38,7 @@ const EVENTS = {
   },
   handle: {
     mode: 'async',
-  },
-  tap: {
-    mode: 'async',
+    tags: ['handleOption', 'tapCommand', 'handleCommand'],
   },
   error: {
     mode: 'sync',
@@ -54,7 +52,7 @@ const CORE_PLUGIN_SETTINGS = {
 }
 const PLUGIN_SETTINGS = {
   registeredEventsOnly: true,
-  disallowedEvents: ['schema', 'config', 'process', 'handle', 'tap'],
+  disallowedEvents: ['schema', 'config', 'process', 'handle'],
 }
 
 

@@ -24,7 +24,7 @@ function* processCb(_, command) {
 }
 
 function dontHandleAbstractCommand(_, command) {
-  if (command.config && command.config.abstract) {
+  if (this.isFinalCommand && command.config && command.config.abstract) {
     let err = new InputError(
       `Command "${command.inputName}" cannot be used directly. ` +
       'Please specify a subcommand'
@@ -32,10 +32,6 @@ function dontHandleAbstractCommand(_, command) {
     err.command = command
     throw err
   }
-}
-
-function handleCb(config, command, context) {
-  return context
 }
 
 
@@ -80,12 +76,12 @@ module.exports = function* execute() {
     }
 
     for (let i = 0; i < request.length; i++) {
-      let event = {
-        name: (request[i + 1]) ? 'tap' : 'handle',
-        cb: handleCb,
+      context = yield yield toot({
+        name: 'handle',
+        args: [config, request[i], context],
         source: this.source,
-      }
-      context = yield yield toot(event, config, request[i], context)
+        isFinalCommand: !request[i + 1],
+      })
       context = yield resumes[i](context)
     }
 
@@ -93,4 +89,5 @@ module.exports = function* execute() {
   })
 
   yield preHookStart('handle', dontHandleAbstractCommand)
+  yield hookEnd('handle', (config, command, context) => context)
 }
