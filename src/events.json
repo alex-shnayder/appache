@@ -71,19 +71,14 @@
       "modifyOption": {
         "implies": "modifyCommand",
         "goesAfter": "addOption"
+      },
+      "handleCommand": {
+        "goesAfter": "modifyCommand"
       }
     }
   },
   "handle": {
-    "mode": "async",
-    "tags": {
-      "tapCommand": {
-        "goesAfter": "handleOption"
-      },
-      "handleCommand": {
-        "goesAfter": "handleOption"
-      }
-    }
+    "mode": "async"
   },
   "error": {
     "mode": "sync"

@@ -1,4 +1,4 @@
-const { next, preHook, hookEnd } = require('hooter/effects')
+const { next, preHook, hook } = require('hooter/effects')
 const { createOption } = require('../../common')
 const modifySchema = require('./modifySchema')
 
@@ -58,7 +58,10 @@ module.exports = function* help() {
     return [schema, config]
   })
 
-  yield hookEnd('process', function* (_, command) {
+  yield hook({
+    event: 'handle',
+    tags: ['handleCommand'],
+  }, function* (_, command) {
     let { inputName, options, config } = command
 
     let isHelpAsked = options && options.some((option) => {
