@@ -1,6 +1,7 @@
 const {
   suspend, getResume, toot, hook, hookEnd, preHookStart,
 } = require('hooter/effects')
+const { Break, Help } = require('../../common')
 const preprocessRequest = require('./preprocessRequest')
 
 
@@ -58,6 +59,12 @@ module.exports = function* execute() {
       if (result instanceof ProcessingResult) {
         request[i] = result.command
         resumes[i] = result.resume
+      } else if (result instanceof Break) {
+        return result.value
+      } else if (result instanceof Help) {
+        let helpResult = new Help()
+        helpResult.command = request[i]
+        return helpResult
       } else {
         return result
       }
@@ -70,6 +77,15 @@ module.exports = function* execute() {
         source: this.source,
         isFinalCommand: !request[i + 1],
       })
+
+      if (context instanceof Break) {
+        return context.value
+      } else if (context instanceof Help) {
+        let result = new Help()
+        result.command = request[i]
+        return result
+      }
+
       context = yield resumes[i](context)
     }
 
