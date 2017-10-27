@@ -1,5 +1,5 @@
 const { next, preHook, hook } = require('hooter/effects')
-const { createOption } = require('../../common')
+const { createOption, Help } = require('../../common')
 const modifySchema = require('./modifySchema')
 
 
@@ -59,22 +59,17 @@ module.exports = function* help() {
   })
 
   yield hook({
-    event: 'handle',
+    event: 'process',
     tags: ['handleCommand'],
   }, function* (_, command) {
-    let { inputName, options, config } = command
-
-    let isHelpAsked = options && options.some((option) => {
+    let isHelpAsked = command.options && command.options.some((option) => {
       return option.config && option.config.isHelpOption
     })
 
-    if (!isHelpAsked) {
-      return yield next(_, command)
+    if (isHelpAsked) {
+      return new Help()
     }
 
-    let help = config && config.help
-    return (typeof help === 'string') ?
-      help :
-      `Help is unavailable for "${inputName}"`
+    return yield next(_, command)
   })
 }

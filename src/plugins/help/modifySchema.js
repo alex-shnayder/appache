@@ -3,7 +3,7 @@ const { assign, push } = require('../../common')
 
 const COMMAND_PROPERTIES = {
   help: {
-    type: ['boolean', 'string'],
+    type: 'boolean',
     default: true,
   },
 }
