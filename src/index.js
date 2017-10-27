@@ -22,6 +22,7 @@ const defaultPlugins = [
   require('./plugins/defaultValues'),
   require('./plugins/processTitle'),
   require('./plugins/api'),
+  require('./plugins/abstractCommands'),
 ]
 
 
