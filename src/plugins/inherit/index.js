@@ -7,7 +7,7 @@ const addInheritance = require('./addInheritance')
 module.exports = function* inherit() {
   yield preHook({
     event: 'schema',
-    tags: ['modifySchema', 'modifyCommandSchema'],
+    tags: ['modifyCommandSchema'],
   }, (schema) => {
     schema = modifySchema(schema)
     return [schema]
@@ -15,9 +15,8 @@ module.exports = function* inherit() {
 
   yield preHook({
     event: 'config',
-    tags: ['modifyConfig', 'modifyCommandConfig'],
-    goesAfter: ['createCommandConfig'],
-    goesBefore: ['modifyConfig'],
+    tags: ['modifyCommandConfig'],
+    goesBefore: ['modifyCommandConfig'],
   }, (schema, config) => {
     config = addInheritance(schema, config)
     return [schema, config]

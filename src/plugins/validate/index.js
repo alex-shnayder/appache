@@ -6,7 +6,7 @@ const validateCommand = require('./validateCommand')
 module.exports = function* validate() {
   yield preHook({
     event: 'schema',
-    tags: ['modifySchema', 'modifyOptionSchema'],
+    tags: ['modifyOptionSchema'],
   }, (schema) => {
     schema = modifySchema(schema)
     return [schema]

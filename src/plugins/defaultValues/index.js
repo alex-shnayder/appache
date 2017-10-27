@@ -10,7 +10,7 @@ module.exports = function* defaultValues() {
 
   yield preHook({
     event: 'process',
-    tags: ['modifyCommand', 'modifyOption'],
+    tags: ['modifyOption'],
     goesBefore: ['modifyOption'],
   }, (_, command, ...args) => {
     let config = command.config

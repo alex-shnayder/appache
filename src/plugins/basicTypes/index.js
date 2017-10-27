@@ -35,7 +35,7 @@ function processOption(option) {
 module.exports = function* basicTypes() {
   yield preHook({
     event: 'process',
-    tags: ['modifyCommand', 'modifyOption'],
+    tags: ['modifyOption'],
   }, (config, command) => {
     let { options } = command
 

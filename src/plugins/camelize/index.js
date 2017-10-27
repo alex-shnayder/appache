@@ -25,7 +25,7 @@ function* processHandler(_, command, ...args) {
 module.exports = function* camelize() {
   yield preHook({
     event: 'process',
-    tags: ['modifyCommand', 'modifyOption'],
+    tags: ['modifyOption'],
     goesAfter: ['modifyOption'],
   }, processHandler)
 }

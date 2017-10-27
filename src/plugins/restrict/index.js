@@ -15,7 +15,7 @@ function validateCommandOptions(options) {
 module.exports = function* restrict() {
   yield preHook({
     event: 'schema',
-    tags: ['modifySchema', 'modifyCommandSchema'],
+    tags: ['modifyCommandSchema'],
   }, (schema) => {
     schema = modifySchema(schema)
     return [schema]

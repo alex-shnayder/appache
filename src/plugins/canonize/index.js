@@ -28,6 +28,6 @@ function* processHandler(config, command, ...args) {
 module.exports = function* canonize() {
   yield preHook({
     event: 'process',
-    tags: ['modifyCommand', 'modifyOption'],
+    tags: ['modifyOption'],
   }, processHandler)
 }

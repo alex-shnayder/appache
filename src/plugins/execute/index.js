@@ -1,5 +1,5 @@
 const {
-  suspend, getResume, toot, hook, hookEnd, preHookStart,
+  suspend, getResume, toot, hook, hookEnd, preHook, preHookStart,
 } = require('hooter/effects')
 const { InputError } = require('../../common')
 const preprocessRequest = require('./preprocessRequest')
@@ -88,6 +88,10 @@ module.exports = function* execute() {
     return context
   })
 
-  yield preHookStart('handle', dontHandleAbstractCommand)
+  yield preHook({
+    event: 'handle',
+    tags: ['handleCommand'],
+    goesBefore: ['tapCommand', 'handleCommand'],
+  }, dontHandleAbstractCommand)
   yield hookEnd('handle', (config, command, context) => context)
 }
