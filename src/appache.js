@@ -12,6 +12,20 @@ const PLUGIN_SETTINGS = {
 }
 
 
+function filterPlugins(plugins) {
+  let disabledPlugins = {}
+
+  plugins.forEach((plugin) => {
+    if (typeof plugin === 'string' && plugin[0] === '-') {
+      disabledPlugins[plugin.slice(1)] = true
+    }
+  })
+
+  return plugins.filter((plugin) => {
+    return typeof plugin === 'function' && !disabledPlugins[plugin.name]
+  })
+}
+
 module.exports = function appache(corePlugins, plugins) {
   if (corePlugins && !Array.isArray(corePlugins)) {
     throw new Error('Core plugins must be an array of functions')
@@ -20,6 +34,8 @@ module.exports = function appache(corePlugins, plugins) {
   if (plugins && !Array.isArray(plugins)) {
     throw new Error('Plugins must be an array of functions')
   }
+
+  plugins = filterPlugins(plugins)
 
   let lifecycle = new Lifecycle(HOOTER_SETTINGS)
   lifecycle.plug(corePlugins, CORE_PLUGIN_SETTINGS)
