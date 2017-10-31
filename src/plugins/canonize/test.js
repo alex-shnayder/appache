@@ -10,8 +10,10 @@ describe('canonize plugin', () => {
 
     assert.deepStrictEqual(value, {
       effect: 'hook',
-      event: 'process',
-      priority: 'end',
+      event: {
+        event: 'process',
+        tags: ['modifyOption'],
+      },
       fn: processHandler,
       routineMode: 'pre',
     })

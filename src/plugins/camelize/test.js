@@ -10,8 +10,11 @@ describe('camelize plugin', () => {
 
     assert.deepStrictEqual(value, {
       effect: 'hook',
-      event: 'process',
-      priority: 'end',
+      event: {
+        event: 'process',
+        goesAfter: ['modifyOption'],
+        tags: ['modifyOption'],
+      },
       fn: processHandler,
       routineMode: 'pre',
     })
