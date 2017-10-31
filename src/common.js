@@ -4,15 +4,20 @@ const wildcardMatch = require('wildcard-match')
 
 class InputError extends Error {}
 
-function Break(value) {
-  let result = Object.create(Break.prototype)
+function Result(value, command) {
+  let result = Object.create(Result.prototype)
   result.value = value
+  result.command = command
   return result
 }
 
-function Help() {
-  return Object.create(Help.prototype)
+function Help(command) {
+  let help = Object.create(Help.prototype)
+  help.command = command
+  return help
 }
+
+Help.prototype = Object.create(Result.prototype)
 
 
 function findByIds(items, ids) {
@@ -247,7 +252,7 @@ function createOption(schema, option) {
 
 
 module.exports = {
-  InputError, Break, Help, findByIds, findOneById, findOneByNames,
+  InputError, Result, Help, findByIds, findOneById, findOneByNames,
   findCommandById, findOptionById, findCommandByFullName, findRootCommands,
   populateCommand, updateCommandById, updateOptionById, optionsToObject,
   compareNames, getCommandFromEvent, assignDefaults, createCommand,
