@@ -39,11 +39,13 @@ module.exports = function* basicTypes() {
   }, (config, command) => {
     let { options } = command
 
-    if (options) {
-      options = options.map(processOption)
+    if (!options || !options.length) {
+      return
     }
 
+    options = options.map(processOption)
     command = Object.assign({}, command, { options })
+
     return [config, command]
   })
 }
