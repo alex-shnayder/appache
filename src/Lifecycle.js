@@ -88,7 +88,7 @@ class LifecycleProxy extends Hooter.HooterProxy {
 
         if (compareNames(fullName, command, true)) {
           options = optionsToObject(options)
-          context = yield handler(options, context, fullName)
+          context = yield handler.call(this, options, context, fullName)
         }
       }
 
