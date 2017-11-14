@@ -230,7 +230,8 @@ function getCommandFromEvent(event) {
 function assignDefaults(itemSchema, item) {
   item = Object.assign({}, item)
 
-  Object.entries(itemSchema.properties).forEach(([key, prop]) => {
+  Object.keys(itemSchema.properties).forEach((key) => {
+    let prop = itemSchema.properties[key]
     if (typeof prop.default !== 'undefined' &&
         typeof item[key] === 'undefined') {
       item[key] = prop.default
