@@ -26,7 +26,7 @@ function suggestCommand(inputCommand, commands) {
   return suggested
 }
 
-module.exports = function handleUnknownCommand(command, parentConfig) {
+module.exports = function handleUndefinedCommand(command, parentConfig) {
   let { fullName, inputName } = command
   let name = fullName[fullName.length - 1]
   let siblings = parentConfig && parentConfig.commands
