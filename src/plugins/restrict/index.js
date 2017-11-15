@@ -25,7 +25,9 @@ function validateCommand(config, command) {
   }
 
   if (needsOptionsChecked) {
-    let undefinedOption = options.find((option) => !option.defined)
+    let undefinedOption = options.find((option) => {
+      return !option.config || !option.config.defined
+    })
 
     if (undefinedOption) {
       throw new InputError(`Unknown option "${undefinedOption.inputName}"`)
