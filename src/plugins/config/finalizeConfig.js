@@ -1,4 +1,4 @@
-function markRootCommands(commands) {
+function markCommands(commands) {
   let newCommands = []
   let nonRootCommands = {}
 
@@ -13,24 +13,32 @@ function markRootCommands(commands) {
   }
 
   for (let i = 0; i < commands.length; i++) {
-    let command = commands[i]
-    let isRoot = !nonRootCommands[command.id]
-
-    // eslint-disable-next-line eqeqeq
-    if (isRoot != command.root) {
-      command = Object.assign({}, command)
-      command.root = isRoot
-    }
-
+    let command = Object.assign({}, commands[i])
+    command.defined = true
+    command.root = !nonRootCommands[command.id]
     newCommands[i] = command
   }
 
   return newCommands
 }
 
+function markOptions(options) {
+  let newOptions = []
+
+  for (let i = 0; i < options.length; i++) {
+    let option = Object.assign({}, options[i])
+    option.defined = true
+    newOptions[i] = option
+  }
+
+  return newOptions
+}
+
 function finalizeConfig(schema, config) {
+  let { commands, options } = config
   config = Object.assign({}, config)
-  config.commands = markRootCommands(config.commands)
+  config.commands = commands && markCommands(commands)
+  config.options = options && markOptions(options)
   config.final = true
   return config
 }

@@ -26,6 +26,9 @@
         "root": {
           "type": "boolean"
         },
+        "defined": {
+          "type": "boolean"
+        },
         "commands": {
           "type": "array",
           "uniqueItems": true,
@@ -69,6 +72,9 @@
         "type": {
           "type": "string",
           "minLength": 1
+        },
+        "defined": {
+          "type": "boolean"
         }
       },
       "required": ["id", "name"]
