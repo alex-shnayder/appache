@@ -1,5 +1,5 @@
 const { postHookEnd } = require('hooter/effects')
-const { findRootCommands } = require('../../common')
+const { findRootCommands } = require('../../core/common')
 
 
 function setProcessTitle(config) {

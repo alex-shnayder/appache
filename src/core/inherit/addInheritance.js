@@ -1,6 +1,6 @@
 const {
   findRootCommands, updateCommandById, populateCommand,
-} = require('../../common')
+} = require('../common')
 
 
 function inheritCommandSettings(

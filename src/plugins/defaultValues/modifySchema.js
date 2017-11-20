@@ -1,4 +1,4 @@
-const { assign } = require('../../common')
+const { assign } = require('../../core/common')
 
 
 const OPTION_PROPERTIES = {

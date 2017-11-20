@@ -1,4 +1,4 @@
-const { assignDefaults: assignItemDefaults } = require('../../common')
+const { assignDefaults: assignItemDefaults } = require('../common')
 
 
 module.exports = function assignDefaults(schema, config) {

@@ -1,6 +1,6 @@
 const {
   InputError, findByIds, findOneByNames, findCommandByFullName,
-} = require('../../common')
+} = require('../common')
 
 
 function canonizeFullName(config, fullName) {

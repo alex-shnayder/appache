@@ -1,4 +1,4 @@
-const { InputError } = require('../../common')
+const { InputError } = require('../../core/common')
 const findLevenshtein = require('./findLevenshtein')
 
 

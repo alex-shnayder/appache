@@ -1,4 +1,4 @@
-const { assign, push } = require('../../common')
+const { assign, push } = require('../../core/common')
 
 
 const COMMAND_PROPERTIES = {

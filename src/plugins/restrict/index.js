@@ -1,5 +1,5 @@
 const { preHook } = require('hooter/effects')
-const { InputError, findCommandByFullName } = require('../../common')
+const { InputError, findCommandByFullName } = require('../../core/common')
 const modifySchema = require('./modifySchema')
 const handleUndefinedCommand = require('./handleUndefinedCommand')
 

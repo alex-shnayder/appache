@@ -1,5 +1,17 @@
+/* eslint-disable global-require */
+
 const Lifecycle = require('./lifecycle')
 const events = require('./events')
+const corePlugins = [
+  require('./init'),
+  require('./schema'),
+  require('./config'),
+  require('./inherit'),
+  require('./error'),
+  require('./start'),
+  require('./execute'),
+  require('./api'),
+]
 
 
 const HOOTER_SETTINGS = { events }
@@ -12,11 +24,7 @@ const PLUGIN_SETTINGS = {
 }
 
 
-module.exports = function appache(corePlugins, plugins) {
-  if (corePlugins && !Array.isArray(corePlugins)) {
-    throw new Error('Core plugins must be an array of functions')
-  }
-
+module.exports = function appacheCore(plugins) {
   if (plugins && !Array.isArray(plugins)) {
     throw new Error('Plugins must be an array of functions')
   }

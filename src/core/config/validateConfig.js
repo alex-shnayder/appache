@@ -1,6 +1,6 @@
 const Ajv = require('ajv')
 const ajvKeywords = require('ajv-keywords')
-const { findOneByNames, populateCommand } = require('../../common')
+const { findOneByNames, populateCommand } = require('../common')
 
 
 let ajv = new Ajv()

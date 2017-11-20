@@ -1,5 +1,5 @@
 const { preHook } = require('hooter/effects')
-const { InputError } = require('../../common')
+const { InputError } = require('../../core/common')
 const coercers = require('./coercers')
 
 

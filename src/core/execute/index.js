@@ -1,7 +1,7 @@
 const {
   suspend, getResume, toot, hook, hookEnd, preHookStart,
 } = require('hooter/effects')
-const { Result } = require('../../common')
+const { Result } = require('../common')
 const preprocessRequest = require('./preprocessRequest')
 
 
