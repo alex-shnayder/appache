@@ -25,8 +25,8 @@ module.exports = function* inherit() {
   yield preHook({
     event: 'execute',
     tags: ['modifyCommand', 'modifyOption'],
-  }, (_, request) => {
-    request = shareOptionValues(request)
-    return [_, request]
+  }, (_, batch) => {
+    batch = shareOptionValues(batch)
+    return [_, batch]
   })
 }

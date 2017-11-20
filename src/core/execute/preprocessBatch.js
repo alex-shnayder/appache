@@ -72,17 +72,17 @@ function transformOptions(options, optionConfigs) {
     })
   } else if (!areOptionsArray) {
     throw new InputError(
-      'The options of a command in a request must be either an array or an object'
+      'The options of a command in a batch must be either an array or an object'
     )
   }
 
   return options.map((option) => {
     if (!option || typeof option !== 'object') {
-      throw new InputError('An option of a command in a request must be an object')
+      throw new InputError('An option of a command in a batch must be an object')
     }
 
     if (!option.name || typeof option.name !== 'string') {
-      throw new InputError('An option of a command in a request must have a name')
+      throw new InputError('An option of a command in a batch must have a name')
     }
 
     if (!optionConfigs || !optionConfigs.length) {
@@ -97,37 +97,37 @@ function transformOptions(options, optionConfigs) {
   })
 }
 
-module.exports = function preprocessRequest(request, config) {
-  if (!Array.isArray(request) || request.length === 0) {
-    throw new InputError('A request must be an array of commands')
+module.exports = function preprocessBatch(batch, config) {
+  if (!Array.isArray(batch) || batch.length === 0) {
+    throw new InputError('A batch must be an array of commands')
   }
 
   let result = []
   let branch = []
 
-  for (let i = 0; i < request.length; i++) {
-    let command = request[i]
+  for (let i = 0; i < batch.length; i++) {
+    let command = batch[i]
 
     if (!command || typeof command !== 'object') {
-      throw new InputError('Each command in a request must be an object')
+      throw new InputError('Each command in a batch must be an object')
     }
 
     let { fullName, options } = command
 
     if (!fullName || !fullName.length) {
-      throw new InputError('Each command in a request must have a full name')
+      throw new InputError('Each command in a batch must have a full name')
     }
 
     if (typeof fullName === 'string') {
       fullName = [fullName]
     } else if (!Array.isArray(fullName)) {
-      throw new InputError('A command\'s fullName in a request must be an array or a string')
+      throw new InputError('A command\'s fullName in a batch must be an array or a string')
     }
 
     fullName = canonizeFullName(config, fullName)
 
     if (branch && !doesFullNameBelongToBranch(fullName, branch)) {
-      let err = new InputError('Commands in a request must form a hierarchy')
+      let err = new InputError('Commands in a batch must form a hierarchy')
       err.command = command
       throw err
     }

@@ -2,7 +2,7 @@ const {
   suspend, getResume, toot, hook, hookEnd, preHookStart,
 } = require('hooter/effects')
 const { Result } = require('../common')
-const preprocessRequest = require('./preprocessRequest')
+const preprocessBatch = require('./preprocessBatch')
 
 
 function ProcessingResult(command, resume) {
@@ -27,7 +27,7 @@ function* processCb(_, command) {
 module.exports = function* execute() {
   let config = yield hook('config')
 
-  yield preHookStart('execute', function(request) {
+  yield preHookStart('execute', function(batch) {
     let _config = config.value
 
     if (!_config) {
@@ -37,11 +37,11 @@ module.exports = function* execute() {
     }
 
     this.source = this.tooter
-    request = preprocessRequest(request, _config)
-    return [_config, request]
+    batch = preprocessBatch(batch, _config)
+    return [_config, batch]
   })
 
-  yield hookEnd('execute', function* (config, request) {
+  yield hookEnd('execute', function* (config, batch) {
     let processEvent = {
       name: 'process',
       cb: processCb,
@@ -50,45 +50,45 @@ module.exports = function* execute() {
     let resumes = []
     let context
 
-    for (let i = 0; i < request.length; i++) {
-      let result = yield yield toot(processEvent, config, request[i])
+    for (let i = 0; i < batch.length; i++) {
+      let result = yield yield toot(processEvent, config, batch[i])
 
       // If the result is not an instance of ProcessingResult,
       // it means that a handler has returned early effectively
       // completing the execution
       if (result instanceof ProcessingResult) {
-        request[i] = result.command
+        batch[i] = result.command
         resumes[i] = result.resume
       } else if (result instanceof Result) {
-        result.command = result.command || request[i]
+        result.command = result.command || batch[i]
         return result
       } else {
         return result
       }
     }
 
-    for (let i = 0; i < request.length; i++) {
+    for (let i = 0; i < batch.length; i++) {
       context = yield yield toot({
         name: 'handle',
-        args: [config, request[i], context],
+        args: [config, batch[i], context],
         source: this.source,
-        isFinalCommand: !request[i + 1],
+        isFinalCommand: !batch[i + 1],
       })
 
       if (context instanceof Result) {
-        context.command = context.command || request[i]
+        context.command = context.command || batch[i]
         return context
       }
 
       context = yield resumes[i](context)
 
       if (context instanceof Result) {
-        context.command = context.command || request[i]
+        context.command = context.command || batch[i]
         return context
       }
     }
 
-    return new Result(context, request[request.length - 1])
+    return new Result(context, batch[batch.length - 1])
   })
 
   yield hookEnd('handle', (config, command, context) => context)
