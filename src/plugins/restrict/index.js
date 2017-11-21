@@ -6,10 +6,9 @@ const handleUndefinedCommand = require('./handleUndefinedCommand')
 
 function validateCommand(config, command) {
   let { fullName, options, config: cmdConfig } = command
-  let isUndefined = !cmdConfig || !cmdConfig.defined
   let needsOptionsChecked = cmdConfig && cmdConfig.restrictOptions && options
 
-  if (isUndefined) {
+  if (!command.defined) {
     let isValid = (fullName.length > 1)
     let parentConfig
 
@@ -25,9 +24,7 @@ function validateCommand(config, command) {
   }
 
   if (needsOptionsChecked) {
-    let undefinedOption = options.find((option) => {
-      return !option.config || !option.config.defined
-    })
+    let undefinedOption = options.find((option) => !option.defined)
 
     if (undefinedOption) {
       throw new InputError(`Unknown option "${undefinedOption.inputName}"`)

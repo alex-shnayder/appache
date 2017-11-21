@@ -48,12 +48,14 @@ function createIntermediateCommands(config, branch, fullName) {
 
   for (let i = branch.length; i < length; i++) {
     let partialFullName = fullName.slice(0, i + 1)
+    let commandConfig = findCommandByFullName(config, partialFullName, true)
 
     commands.push({
       fullName: partialFullName,
       inputName: partialFullName.join(' '),
       options: [],
-      config: findCommandByFullName(config, partialFullName, true),
+      config: commandConfig,
+      defined: Boolean(commandConfig),
     })
   }
 
@@ -92,7 +94,7 @@ function transformOptions(options, optionConfigs) {
     let optionConfig = findOneByNames(optionConfigs, option.name)
     let inputName = option.inputName || option.name
     return Object.assign({}, option, {
-      inputName, config: optionConfig,
+      inputName, config: optionConfig, defined: Boolean(optionConfig),
     })
   })
 }
@@ -145,6 +147,7 @@ module.exports = function preprocessBatch(batch, config) {
     command.inputName = command.inputName || fullName.join(' ')
     command.config = commandConfig
     command.options = transformOptions(options, optionConfigs)
+    command.defined = Boolean(commandConfig)
 
     branch = fullName
     result.push(command)
