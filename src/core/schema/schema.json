@@ -1,4 +1,5 @@
 {
+  "id": "appache",
   "definitions": {
     "command": {
       "type": "object",
