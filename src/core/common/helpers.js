@@ -1,23 +1,4 @@
-const objectPathImmutable = require('object-path-immutable')
 const wildcardMatch = require('wildcard-match')
-
-
-class InputError extends Error {}
-
-function Result(value, command) {
-  let result = Object.create(Result.prototype)
-  result.value = value
-  result.command = command
-  return result
-}
-
-function Help(command) {
-  let help = Object.create(Help.prototype)
-  help.command = command
-  return help
-}
-
-Help.prototype = Object.create(Result.prototype)
 
 
 function findByIds(items, ids) {
@@ -253,11 +234,8 @@ function createOption(schema, option) {
 
 
 module.exports = {
-  InputError, Result, Help, findByIds, findOneById, findOneByNames,
-  findCommandById, findOptionById, findCommandByFullName, findRootCommands,
-  populateCommand, updateCommandById, updateOptionById, optionsToObject,
-  compareNames, getCommandFromEvent, assignDefaults, createCommand,
-  createOption,
+  findByIds, findOneById, findOneByNames, findCommandById, findOptionById,
+  findCommandByFullName, findRootCommands, populateCommand, updateCommandById,
+  updateOptionById, optionsToObject, compareNames, getCommandFromEvent,
+  assignDefaults, createCommand, createOption,
 }
-
-Object.assign(module.exports, objectPathImmutable)
