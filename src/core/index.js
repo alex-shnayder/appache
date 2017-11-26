@@ -3,14 +3,14 @@
 const Lifecycle = require('./lifecycle')
 const events = require('./events')
 const corePlugins = [
-  require('./init'),
-  require('./schema'),
-  require('./config'),
-  require('./inherit'),
-  require('./error'),
-  require('./start'),
-  require('./execute'),
-  require('./api'),
+  require('./plugins/init'),
+  require('./plugins/schema'),
+  require('./plugins/config'),
+  require('./plugins/inherit'),
+  require('./plugins/error'),
+  require('./plugins/start'),
+  require('./plugins/execute'),
+  require('./plugins/api'),
 ]
 
 
