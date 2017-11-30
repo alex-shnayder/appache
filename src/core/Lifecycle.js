@@ -1,7 +1,7 @@
 const Hooter = require('hooter')
 const { next } = require('hooter/effects')
 const events = require('./events')
-const { optionsToObject, compareNames } = require('./common')
+const { optionsToObject } = require('./common')
 
 
 function expandTags(tags, tagsConfig, result = []) {
@@ -68,11 +68,7 @@ class LifecycleProxy extends Hooter.HooterProxy {
     return updateHandlerTags(handler)
   }
 
-  _createTapOrHandleHook(command, handler, checkIfCommandIsFinal) {
-    if (typeof command !== 'string' && !Array.isArray(command)) {
-      throw new Error('A command must either be a string or an array of strings')
-    }
-
+  _createTapOrHandleHook(commandId, handler, checkIfCommandIsFinal) {
     if (typeof handler !== 'function') {
       throw new Error('A handler must be a function')
     }
@@ -84,11 +80,9 @@ class LifecycleProxy extends Hooter.HooterProxy {
         typeof checkIfCommandIsFinal !== 'boolean' ||
         checkIfCommandIsFinal === this.isFinalCommand
       ) {
-        let { fullName, options } = _command
-
-        if (compareNames(fullName, command, true)) {
-          options = optionsToObject(options)
-          context = yield handler.call(this, options, context, fullName)
+        if (_command.config && _command.config.id === commandId) {
+          let options = optionsToObject(_command.options)
+          context = yield handler.call(this, options, context)
         }
       }
 
@@ -99,7 +93,7 @@ class LifecycleProxy extends Hooter.HooterProxy {
   handle(command, handler) {
     let hook = this._createTapOrHandleHook(command, handler, true)
     return this.hook({
-      event: 'handle',
+      event: 'dispatch',
       tags: ['handleCommand'],
     }, hook)
   }
@@ -107,7 +101,7 @@ class LifecycleProxy extends Hooter.HooterProxy {
   tap(command, handler) {
     let hook = this._createTapOrHandleHook(command, handler, false)
     return this.hook({
-      event: 'handle',
+      event: 'dispatch',
       tags: ['tapCommand'],
     }, hook)
   }
@@ -115,7 +109,7 @@ class LifecycleProxy extends Hooter.HooterProxy {
   tapAndHandle(command, handler) {
     let hook = this._createTapOrHandleHook(command, handler)
     this.hook({
-      event: 'handle',
+      event: 'dispatch',
       tags: ['handleCommand', 'tapCommand'],
     }, hook)
   }

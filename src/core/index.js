@@ -11,6 +11,7 @@ const corePlugins = [
   require('./plugins/start'),
   require('./plugins/execute'),
   require('./plugins/api'),
+  require('./plugins/restrict'),
 ]
 
 
@@ -20,7 +21,7 @@ const CORE_PLUGIN_SETTINGS = {
 }
 const PLUGIN_SETTINGS = {
   registeredEventsOnly: true,
-  disallowedEvents: ['schema', 'config', 'process', 'handle'],
+  disallowedEvents: ['schema', 'config', 'process', 'dispatch'],
 }
 
 

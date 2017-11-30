@@ -24,7 +24,7 @@ module.exports = function* abstractCommands() {
   })
 
   yield preHook({
-    event: 'handle',
+    event: 'dispatch',
     tags: ['handleCommand'],
     goesBefore: ['tapCommand', 'handleCommand'],
   }, dontHandleAbstractCommand)

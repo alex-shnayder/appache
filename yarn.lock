@@ -1482,10 +1482,6 @@ which@^1.2.10, which@^1.2.9:
   dependencies:
     isexe "^2.0.0"
 
-wildcard-match@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/wildcard-match/-/wildcard-match-1.1.0.tgz#166a247a83581921867841c9dba03b75b98e9a3e"
-
 wordwrap@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/wordwrap/-/wordwrap-1.0.0.tgz#27584810891456a4171c8d0226441ade90cbcaeb"

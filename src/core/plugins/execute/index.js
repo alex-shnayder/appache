@@ -1,26 +1,58 @@
 const {
-  suspend, getResume, toot, hook, hookEnd, preHookStart,
+  next, toot, hook, hookEnd, preHook, preHookStart,
 } = require('hooter/effects')
 const { Result } = require('../../common')
-const preprocessBatch = require('./preprocessBatch')
+const normalizeBatch = require('./normalizeBatch')
+const assignConfigs = require('./assignConfigs')
 
 
-function ProcessingResult(command, resume) {
-  this.command = command
-  this.resume = resume
-}
-
-function validateCommand(command) {
+function processCb(_, command) {
   if (!command || typeof command !== 'object') {
     throw new Error('The result of processing a command must be a command object')
   }
+  return command
 }
 
-function* processCb(_, command) {
-  validateCommand(command)
-  let resume = yield getResume()
-  let result = new ProcessingResult(command, resume)
-  return yield suspend(result)
+function* process(config, batch) {
+  let processEvent = {
+    name: 'process',
+    cb: processCb,
+    source: this.source,
+  }
+  let newBatch = []
+
+  for (let i = 0; i < batch.length; i++) {
+    let result = yield yield toot(processEvent, config, batch[i])
+
+    if (result instanceof Result) {
+      result.command = result.command || batch[i]
+      return result
+    }
+
+    newBatch[i] = result
+  }
+
+  return yield next(config, newBatch)
+}
+
+function* dispatch(config, batch) {
+  let context
+
+  for (let i = 0; i < batch.length; i++) {
+    context = yield yield toot({
+      name: 'dispatch',
+      args: [config, batch[i], context],
+      source: this.source,
+      isFinalCommand: !batch[i + 1],
+    })
+
+    if (context instanceof Result) {
+      context.command = context.command || batch[i]
+      return context
+    }
+  }
+
+  return new Result(context, batch[batch.length - 1])
 }
 
 
@@ -37,59 +69,32 @@ module.exports = function* execute() {
     }
 
     this.source = this.tooter
-    batch = preprocessBatch(batch, _config)
     return [_config, batch]
   })
 
-  yield hookEnd('execute', function* (config, batch) {
-    let processEvent = {
-      name: 'process',
-      cb: processCb,
-      source: this.source,
-    }
-    let resumes = []
-    let context
-
-    for (let i = 0; i < batch.length; i++) {
-      let result = yield yield toot(processEvent, config, batch[i])
-
-      // If the result is not an instance of ProcessingResult,
-      // it means that a handler has returned early effectively
-      // completing the execution
-      if (result instanceof ProcessingResult) {
-        batch[i] = result.command
-        resumes[i] = result.resume
-      } else if (result instanceof Result) {
-        result.command = result.command || batch[i]
-        return result
-      } else {
-        return result
-      }
-    }
-
-    for (let i = 0; i < batch.length; i++) {
-      context = yield yield toot({
-        name: 'handle',
-        args: [config, batch[i], context],
-        source: this.source,
-        isFinalCommand: !batch[i + 1],
-      })
-
-      if (context instanceof Result) {
-        context.command = context.command || batch[i]
-        return context
-      }
-
-      context = yield resumes[i](context)
-
-      if (context instanceof Result) {
-        context.command = context.command || batch[i]
-        return context
-      }
-    }
-
-    return new Result(context, batch[batch.length - 1])
+  yield preHook({
+    event: 'execute',
+    tags: ['modifyBatch', 'modifyCommand', 'modifyOption'],
+    goesBefore: ['modifyBatch'],
+  }, (config, batch) => {
+    batch = normalizeBatch(batch)
+    return [config, batch]
   })
 
-  yield hookEnd('handle', (config, command, context) => context)
+  yield preHook({
+    event: 'execute',
+    tags: ['assignCommandConfig', 'assignOptionConfig'],
+  }, (config, batch) => {
+    batch = assignConfigs(config, batch)
+    return [config, batch]
+  })
+
+  yield hook({
+    event: 'execute',
+    tags: ['process'],
+  }, process)
+
+  yield hookEnd('execute', dispatch)
+
+  yield hookEnd('dispatch', (config, command, context) => context)
 }

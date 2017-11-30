@@ -1,6 +1,3 @@
-const wildcardMatch = require('wildcard-match')
-
-
 function findByIds(items, ids) {
   return ids
     .map((id) => {
@@ -46,27 +43,6 @@ function findOptionById(config, id) {
   if (options && options.length) {
     return findOneById(options, id)
   }
-}
-
-function findCommandByFullName(config, fullName, populate) {
-  let commands = config.commands || []
-  let command
-
-  for (let i = 0; i < fullName.length; i++) {
-    command = findOneByNames(commands, fullName[i])
-
-    if (!command) {
-      return
-    }
-
-    commands = findByIds(config.commands, command.commands)
-  }
-
-  if (command && populate) {
-    command = populateCommand(config, command)
-  }
-
-  return command
 }
 
 function findRootCommands(config, populate) {
@@ -182,28 +158,12 @@ function optionsToObject(options) {
   }, {})
 }
 
-function compareNames(nameA, nameB, allowWildcards) {
-  nameA = (typeof nameA === 'string') ? [nameA] : nameA
-  nameB = (typeof nameB === 'string') ? [nameB] : nameB
-
-  if (!Array.isArray(nameA) || !Array.isArray(nameB)) {
-    throw new Error('A name must be an array or a string')
-  }
-
-  if (allowWildcards) {
-    return wildcardMatch(nameA, nameB)
-  } else {
-    return nameA.length === nameB.length &&
-      nameA.every((n, i) => nameB[i] === n)
-  }
-}
-
 function getCommandFromEvent(event) {
   let { args, name } = event
 
   if (name === 'execute') {
     return args && args[1] && args[1][0]
-  } else if (name === 'process' || name === 'handle' || name === 'tap') {
+  } else if (name === 'process' || name === 'dispatch') {
     return args && args[1]
   }
 }
@@ -235,7 +195,7 @@ function createOption(schema, option) {
 
 module.exports = {
   findByIds, findOneById, findOneByNames, findCommandById, findOptionById,
-  findCommandByFullName, findRootCommands, populateCommand, updateCommandById,
-  updateOptionById, optionsToObject, compareNames, getCommandFromEvent,
-  assignDefaults, createCommand, createOption,
+  findRootCommands, populateCommand, updateCommandById, updateOptionById,
+  optionsToObject, getCommandFromEvent, assignDefaults, createCommand,
+  createOption,
 }

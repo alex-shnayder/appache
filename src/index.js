@@ -2,7 +2,6 @@
 
 const core = require('./core')
 const defaultPlugins = [
-  require('./plugins/restrict'),
   require('./plugins/require'),
   require('./plugins/coerce'),
   require('./plugins/validate'),

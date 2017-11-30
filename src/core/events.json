@@ -50,8 +50,15 @@
   "execute": {
     "mode": "async",
     "tags": {
+      "addCommand": {
+        "implies": "modifyBatch"
+      },
       "modifyCommand": {
+        "implies": "modifyBatch",
         "goesAfter": "addCommand"
+      },
+      "assignCommandConfig": {
+        "implies": "modifyCommand"
       },
       "addOption": {
         "implies": "modifyCommand"
@@ -59,6 +66,13 @@
       "modifyOption": {
         "implies": "modifyCommand",
         "goesAfter": "addOption"
+      },
+      "assignOptionConfig": {
+        "implies": "modifyOption"
+      },
+      "process": {
+        "implies": ["modifyCommand", "modifyOption"],
+        "goesAfter": ["assignCommandConfig", "assignOptionConfig"]
       }
     }
   },
@@ -77,7 +91,7 @@
       }
     }
   },
-  "handle": {
+  "dispatch": {
     "mode": "async"
   },
   "error": {
