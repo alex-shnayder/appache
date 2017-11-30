@@ -11,6 +11,7 @@ const defaultPlugins = [
   require('./plugins/defaultValues'),
   require('./plugins/processTitle'),
   require('./plugins/abstractCommands'),
+  require('./plugins/alias'),
 ]
 
 
