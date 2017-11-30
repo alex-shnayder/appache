@@ -10,17 +10,21 @@ function suggestCommand(inputCommand, commands) {
   let suggested
 
   commands.forEach((command) => {
-    let { name, aliases } = command
+    let { name, aliases, hidden, hiddenNames } = command
     let names = aliases ? aliases.concat(name) : [name]
 
-    names.forEach((name) => {
-      let distance = findLevenshtein(inputCommand, name)
+    if (!hidden) {
+      names.forEach((name) => {
+        if (!hiddenNames.includes(name)) {
+          let distance = findLevenshtein(inputCommand, name)
 
-      if (distance <= LEVENSHTEIN_THRESHOLD && distance < bestDistance) {
-        bestDistance = distance
-        suggested = name
-      }
-    })
+          if (distance <= LEVENSHTEIN_THRESHOLD && distance < bestDistance) {
+            bestDistance = distance
+            suggested = name
+          }
+        }
+      })
+    }
   })
 
   return suggested
