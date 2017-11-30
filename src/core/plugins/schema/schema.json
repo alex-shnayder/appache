@@ -30,6 +30,9 @@
         "hidden": {
           "type": "boolean"
         },
+        "defaultCommand": {
+          "$ref": "#/definitions/command/properties/name"
+        },
         "commands": {
           "type": "array",
           "uniqueItems": true,
