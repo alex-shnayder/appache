@@ -30,6 +30,13 @@
         "hidden": {
           "type": "boolean"
         },
+        "hiddenNames": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/command/properties/name"
+          }
+        },
         "defaultCommand": {
           "$ref": "#/definitions/command/properties/name"
         },
@@ -79,6 +86,13 @@
         },
         "hidden": {
           "type": "boolean"
+        },
+        "hiddenNames": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/option/properties/name"
+          }
         }
       },
       "required": ["id", "name"]
