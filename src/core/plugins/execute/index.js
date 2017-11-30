@@ -6,17 +6,10 @@ const normalizeBatch = require('./normalizeBatch')
 const assignConfigs = require('./assignConfigs')
 
 
-function processCb(_, command) {
-  if (!command || typeof command !== 'object') {
-    throw new Error('The result of processing a command must be a command object')
-  }
-  return command
-}
-
 function* process(config, batch) {
   let processEvent = {
     name: 'process',
-    cb: processCb,
+    cb: (_, command) => command,
     source: this.source,
   }
   let newBatch = []
@@ -27,6 +20,12 @@ function* process(config, batch) {
     if (result instanceof Result) {
       result.command = result.command || batch[i]
       return result
+    }
+
+    if (!result || typeof result !== 'object') {
+      throw new Error(
+        'The result of processing a command must be a command object or an instance of Result'
+      )
     }
 
     newBatch[i] = result
