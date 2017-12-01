@@ -45,16 +45,17 @@ function assignCommandConfig(config, commandConfigs, defCommand, command) {
 
 module.exports = function assignConfigs(config, batch) {
   let commands = findRootCommands(config)
-  let defaultCommand
+  let { defaultCommand: defCommand } = config
 
   return batch.map((command) => {
+    defCommand = commands && defCommand && findOneByNames(commands, defCommand)
+
     if (commands && commands.length) {
-      command = assignCommandConfig(config, commands, defaultCommand, command)
+      command = assignCommandConfig(config, commands, defCommand, command)
     }
 
-    ({ commands, defaultCommand } = command.config || {})
+    ({ commands, defaultCommand: defCommand } = command.config || {})
     commands = commands && findByIds(config.commands, commands)
-    defaultCommand = defaultCommand && findOneByNames(commands, defaultCommand)
 
     return command
   })

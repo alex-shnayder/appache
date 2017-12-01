@@ -1,12 +1,12 @@
 const { postHookEnd } = require('hooter/effects')
-const { findRootCommands } = require('../../core/common')
+const { findDefaultRootCommand } = require('../../core/common')
 
 
 function setProcessTitle(config) {
-  let commands = findRootCommands(config)
+  let command = findDefaultRootCommand(config)
 
-  if (commands.length === 1) {
-    process.title = commands[0].name
+  if (command) {
+    process.title = command.name
   }
 
   return config

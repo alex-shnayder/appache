@@ -18,7 +18,7 @@ describe('processTitle plugin', () => {
   })
 
   describe('setProcessTitle', () => {
-    it('sets the process title to the name of the only root command', () => {
+    it('sets the process title to the name of the default root command', () => {
       let config = {
         commands: [{
           name: 'foo',
@@ -27,20 +27,23 @@ describe('processTitle plugin', () => {
           root: true,
         }, {
           name: 'baz',
+          root: true,
         }],
         final: true,
+        defaultCommand: 'baz',
       }
 
       let originalTitle = process.title
       setProcessTitle(config)
-      assert(process.title === 'bar')
+      assert(process.title === 'baz')
       process.title = originalTitle
     })
 
-    it('doesn\'t do anything if there is more than one root command', () => {
+    it('doesn\'t do anything if there is no default root command', () => {
       let config = {
         commands: [{
           name: 'foo',
+          root: true,
         }, {
           name: 'bar',
         }],

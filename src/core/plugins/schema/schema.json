@@ -118,6 +118,9 @@
       "items": {
         "$ref": "#/definitions/option"
       }
+    },
+    "defaultCommand": {
+      "$ref": "#/definitions/command/properties/name"
     }
   },
   "required": ["commands"]

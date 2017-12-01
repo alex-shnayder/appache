@@ -72,6 +72,14 @@ function findRootCommands(config, populate) {
   return commands
 }
 
+function findDefaultRootCommand(config) {
+  if (!config.defaultCommand) {
+    return
+  }
+  let rootCommands = findRootCommands(config)
+  return findOneByNames(rootCommands, config.defaultCommand)
+}
+
 function populateCommand(config, command) {
   let { options, commands } = command
 
@@ -195,7 +203,7 @@ function createOption(schema, option) {
 
 module.exports = {
   findByIds, findOneById, findOneByNames, findCommandById, findOptionById,
-  findRootCommands, populateCommand, updateCommandById, updateOptionById,
-  optionsToObject, getCommandFromEvent, assignDefaults, createCommand,
-  createOption,
+  findRootCommands, findDefaultRootCommand, populateCommand, updateCommandById,
+  updateOptionById, optionsToObject, getCommandFromEvent, assignDefaults,
+  createCommand, createOption,
 }
