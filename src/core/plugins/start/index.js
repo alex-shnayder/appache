@@ -13,6 +13,7 @@ module.exports = function* start() {
   })
 
   yield hookEnd('start', function* (config) {
-    return yield toot('activate', config)
+    yield toot('activate', config)
+    return config
   })
 }
