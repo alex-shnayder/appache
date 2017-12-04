@@ -55,8 +55,8 @@ function updateHandlerTags(handler) {
   }
 
   handler.tags = tags
-  handler.goesBefore = goesBefore && goesBefore
-  handler.goesAfter = goesAfter && goesAfter
+  handler.goesBefore = goesBefore
+  handler.goesAfter = goesAfter
 
   return handler
 }

@@ -34,21 +34,21 @@
     "tags": {
       "createConfig": {},
       "modifyConfig": {
-        "goesAfter": "createConfig"
+        "goesAfter": ["createConfig"]
       },
       "createCommandConfig": {
         "implies": "modifyConfig"
       },
       "modifyCommandConfig": {
         "implies": "modifyConfig",
-        "goesAfter": "createCommandConfig"
+        "goesAfter": ["createCommandConfig"]
       },
       "createOptionConfig": {
         "implies": "modifyConfig"
       },
       "modifyOptionConfig": {
         "implies": "modifyConfig",
-        "goesAfter": "createOptionConfig"
+        "goesAfter": ["createOptionConfig"]
       }
     }
   },
@@ -61,14 +61,14 @@
       },
       "modifyCommand": {
         "implies": "modifyBatch",
-        "goesAfter": "addCommand"
+        "goesAfter": ["addCommand"]
       },
       "addOption": {
         "implies": "modifyCommand"
       },
       "modifyOption": {
         "implies": "modifyCommand",
-        "goesAfter": "addOption"
+        "goesAfter": ["addOption"]
       },
       "identify": {
         "implies": ["modifyCommand", "modifyOption"]
@@ -106,10 +106,10 @@
       },
       "modifyOption": {
         "implies": "modifyCommand",
-        "goesAfter": "addOption"
+        "goesAfter": ["addOption"]
       },
       "handleCommand": {
-        "goesAfter": "modifyCommand"
+        "goesAfter": ["modifyCommand"]
       }
     }
   },
