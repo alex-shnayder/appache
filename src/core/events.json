@@ -2,6 +2,7 @@
   "schema": {
     "mode": "sync",
     "tags": {
+      "modifySchema": {},
       "modifyCommandSchema": {
         "implies": "modifySchema"
       },
@@ -11,7 +12,10 @@
     }
   },
   "init": {
-    "mode": "sync"
+    "mode": "sync",
+    "tags": {
+      "api": {}
+    }
   },
   "start": {
     "mode": "sync"
@@ -28,6 +32,7 @@
   "config": {
     "mode": "sync",
     "tags": {
+      "createConfig": {},
       "modifyConfig": {
         "goesAfter": "createConfig"
       },
@@ -50,6 +55,7 @@
   "execute": {
     "mode": "async",
     "tags": {
+      "modifyBatch": {},
       "addCommand": {
         "implies": "modifyBatch"
       },
@@ -76,6 +82,7 @@
   "identify": {
     "mode": "async",
     "tags": {
+      "modifyBatch": {},
       "modifyCommand": {
         "implies": "modifyBatch"
       },
@@ -93,6 +100,7 @@
   "process": {
     "mode": "async",
     "tags": {
+      "modifyCommand": {},
       "addOption": {
         "implies": "modifyCommand"
       },
@@ -106,7 +114,11 @@
     }
   },
   "dispatch": {
-    "mode": "async"
+    "mode": "async",
+    "tags": {
+      "tapCommand": {},
+      "handleCommand": {}
+    }
   },
   "error": {
     "mode": "sync"
