@@ -3,7 +3,6 @@ const {
 } = require('hooter/effects')
 const { Result } = require('../../common')
 const normalizeBatch = require('./normalizeBatch')
-const assignConfigs = require('./assignConfigs')
 
 
 function* process(config, batch) {
@@ -82,9 +81,13 @@ module.exports = function* execute() {
 
   yield preHook({
     event: 'execute',
-    tags: ['assignCommandConfig', 'assignOptionConfig'],
-  }, (config, batch) => {
-    batch = assignConfigs(config, batch)
+    tags: ['identify'],
+  }, function* (config, batch) {
+    batch = yield yield toot({
+      name: 'identify',
+      source: this.source,
+      args: [batch],
+    })
     return [config, batch]
   })
 

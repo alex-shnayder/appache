@@ -57,9 +57,6 @@
         "implies": "modifyBatch",
         "goesAfter": "addCommand"
       },
-      "assignCommandConfig": {
-        "implies": "modifyCommand"
-      },
       "addOption": {
         "implies": "modifyCommand"
       },
@@ -67,12 +64,29 @@
         "implies": "modifyCommand",
         "goesAfter": "addOption"
       },
-      "assignOptionConfig": {
-        "implies": "modifyOption"
+      "identify": {
+        "implies": ["modifyCommand", "modifyOption"]
       },
       "process": {
         "implies": ["modifyCommand", "modifyOption"],
-        "goesAfter": ["assignCommandConfig", "assignOptionConfig"]
+        "goesAfter": ["identify"]
+      }
+    }
+  },
+  "identify": {
+    "mode": "async",
+    "tags": {
+      "modifyCommand": {
+        "implies": "modifyBatch"
+      },
+      "assignCommandConfig": {
+        "implies": "modifyCommand"
+      },
+      "modifyOption": {
+        "implies": "modifyCommand"
+      },
+      "assignOptionConfig": {
+        "implies": "modifyOption"
       }
     }
   },
