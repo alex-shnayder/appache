@@ -16,7 +16,7 @@ function expandTags(tags, tagsConfig, result = []) {
     }
 
     if (implies) {
-      impliedTags.push(implies)
+      impliedTags.push(...implies)
     }
   }
 

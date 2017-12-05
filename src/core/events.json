@@ -4,10 +4,10 @@
     "tags": {
       "modifySchema": {},
       "modifyCommandSchema": {
-        "implies": "modifySchema"
+        "implies": ["modifySchema"]
       },
       "modifyOptionSchema": {
-        "implies": "modifySchema"
+        "implies": ["modifySchema"]
       }
     }
   },
@@ -37,17 +37,17 @@
         "goesAfter": ["createConfig"]
       },
       "createCommandConfig": {
-        "implies": "modifyConfig"
+        "implies": ["modifyConfig"]
       },
       "modifyCommandConfig": {
-        "implies": "modifyConfig",
+        "implies": ["modifyConfig"],
         "goesAfter": ["createCommandConfig"]
       },
       "createOptionConfig": {
-        "implies": "modifyConfig"
+        "implies": ["modifyConfig"]
       },
       "modifyOptionConfig": {
-        "implies": "modifyConfig",
+        "implies": ["modifyConfig"],
         "goesAfter": ["createOptionConfig"]
       }
     }
@@ -57,17 +57,17 @@
     "tags": {
       "modifyBatch": {},
       "addCommand": {
-        "implies": "modifyBatch"
+        "implies": ["modifyBatch"]
       },
       "modifyCommand": {
-        "implies": "modifyBatch",
+        "implies": ["modifyBatch"],
         "goesAfter": ["addCommand"]
       },
       "addOption": {
-        "implies": "modifyCommand"
+        "implies": ["modifyCommand"]
       },
       "modifyOption": {
-        "implies": "modifyCommand",
+        "implies": ["modifyCommand"],
         "goesAfter": ["addOption"]
       },
       "identify": {
@@ -84,16 +84,16 @@
     "tags": {
       "modifyBatch": {},
       "modifyCommand": {
-        "implies": "modifyBatch"
+        "implies": ["modifyBatch"]
       },
       "assignCommandConfig": {
-        "implies": "modifyCommand"
+        "implies": ["modifyCommand"]
       },
       "modifyOption": {
-        "implies": "modifyCommand"
+        "implies": ["modifyCommand"]
       },
       "assignOptionConfig": {
-        "implies": "modifyOption"
+        "implies": ["modifyOption"]
       }
     }
   },
@@ -102,10 +102,10 @@
     "tags": {
       "modifyCommand": {},
       "addOption": {
-        "implies": "modifyCommand"
+        "implies": ["modifyCommand"]
       },
       "modifyOption": {
-        "implies": "modifyCommand",
+        "implies": ["modifyCommand"],
         "goesAfter": ["addOption"]
       },
       "handleCommand": {
