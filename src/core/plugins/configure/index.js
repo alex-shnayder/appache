@@ -4,7 +4,7 @@ const validateConfig = require('./validateConfig')
 const finalizeConfig = require('./finalizeConfig')
 
 
-module.exports = function* config() {
+module.exports = function* configure() {
   yield preHook({
     event: 'configure',
     tags: ['modifyCommandConfig', 'modifyOptionConfig'],
