@@ -1,27 +1,75 @@
 const Hooter = require('hooter')
 const { next } = require('hooter/effects')
-const events = require('./events')
+const rawEvents = require('./events')
 const { optionsToObject } = require('./common')
 
 
-function expandTags(tags, tagsConfig, result = []) {
-  let impliedTags = []
+const events = normalizeEventsConfig(rawEvents)
 
-  for (let i = 0; i < tags.length; i++) {
-    let tag = tags[i]
-    let implies = tagsConfig[tag] && tagsConfig[tag].implies
 
-    if (!result.includes(tag)) {
-      result.push(tag)
+// - Adds tags that are mentioned in implies/goes*, but aren't present
+// - Sets impliedBy
+function normalizeEventsConfig(events) {
+  let newEvents = {}
+
+  Object.keys(events).forEach((eventName) => {
+    let event = Object.assign({}, events[eventName])
+    newEvents[eventName] = event
+
+    let tags = Object.assign({}, event.tags)
+    event.tags = tags
+
+    Object.keys(tags).forEach((tagName) => {
+      let tag = Object.assign({}, tags[tagName])
+      tags[tagName] = tag
+
+      if (tag.impliedBy) {
+        throw new Error('"impliedBy" must not be set explicitly')
+      }
+
+      if (tag.goesAfter) {
+        tag.goesAfter.forEach((goesAfterTagName) => {
+          tags[goesAfterTagName] = tags[goesAfterTagName] || {}
+        })
+      }
+
+      if (tag.goesBefore) {
+        tag.goesBefore.forEach((goesBeforeTagName) => {
+          tags[goesBeforeTagName] = tags[goesBeforeTagName] || {}
+        })
+      }
+
+      if (tag.implies) {
+        tag.implies.forEach((impliedTagName) => {
+          tags[impliedTagName] = tags[impliedTagName] || {}
+          tags[impliedTagName].impliedBy = tags[impliedTagName].impliedBy || []
+          tags[impliedTagName].impliedBy.push(tagName)
+        })
+      }
+    })
+  })
+
+  return newEvents
+}
+
+function expandImplied(items, itemsConfig, property, result = []) {
+  let impliedItems = []
+
+  for (let i = 0; i < items.length; i++) {
+    let item = items[i]
+    let implies = itemsConfig[item] && itemsConfig[item][property]
+
+    if (!result.includes(item)) {
+      result.push(item)
     }
 
     if (implies) {
-      impliedTags.push(...implies)
+      impliedItems.push(...implies)
     }
   }
 
-  if (impliedTags.length) {
-    expandTags(impliedTags, tagsConfig, result)
+  if (impliedItems.length) {
+    expandImplied(impliedItems, itemsConfig, property, result)
   }
 
   return result
@@ -36,7 +84,7 @@ function updateHandlerTags(handler) {
     return handler
   }
 
-  tags = expandTags(tags, eventTags)
+  tags = expandImplied(tags, eventTags, 'implies')
 
   for (let i = 0; i < tags.length; i++) {
     let tag = tags[i]
@@ -53,6 +101,9 @@ function updateHandlerTags(handler) {
       goesAfter.push(...tagGoesAfter)
     }
   }
+
+  goesBefore = goesBefore && expandImplied(goesBefore, eventTags, 'impliedBy')
+  goesAfter = goesAfter && expandImplied(goesAfter, eventTags, 'impliedBy')
 
   handler.tags = tags
   handler.goesBefore = goesBefore
