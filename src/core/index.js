@@ -22,7 +22,7 @@ const CORE_PLUGIN_SETTINGS = {
 }
 const PLUGIN_SETTINGS = {
   registeredEventsOnly: true,
-  disallowedEvents: ['schema', 'config', 'process', 'dispatch'],
+  disallowedEvents: ['schematize', 'configure', 'process', 'dispatch'],
 }
 
 
@@ -36,5 +36,5 @@ module.exports = function appacheCore(plugins) {
   lifecycle.plug(plugins, PLUGIN_SETTINGS)
   lifecycle.start()
 
-  return lifecycle.toot('init')
+  return lifecycle.toot('initialize')
 }

@@ -55,7 +55,7 @@ function* dispatch(config, batch) {
 
 
 module.exports = function* execute() {
-  let config = yield hook('config')
+  let config = yield hook('configure')
 
   yield preHookStart('execute', function(batch) {
     let _config = config.value

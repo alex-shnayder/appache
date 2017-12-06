@@ -4,7 +4,7 @@ const modifySchema = require('./modifySchema')
 
 module.exports = function* defaultValues() {
   yield preHook({
-    event: 'schema',
+    event: 'schematize',
     tags: ['modifySchema'],
   }, (schema) => [modifySchema(schema)])
 

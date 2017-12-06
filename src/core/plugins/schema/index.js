@@ -3,6 +3,6 @@ const baseSchema = require('./schema')
 
 
 module.exports = function* schema() {
-  yield preHookStart('schema', () => [baseSchema])
-  yield hookEnd('schema', (schema) => schema)
+  yield preHookStart('schematize', () => [baseSchema])
+  yield hookEnd('schematize', (schema) => schema)
 }

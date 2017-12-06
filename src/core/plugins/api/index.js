@@ -5,7 +5,7 @@ const TAGS = ['api']
 
 module.exports = function* api(lifecycle) {
   yield preHook({
-    event: 'init',
+    event: 'initialize',
     tags: TAGS,
     goesAfter: TAGS,
   }, (schema, result) => [schema, result || lifecycle])

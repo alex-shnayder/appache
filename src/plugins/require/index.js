@@ -19,7 +19,7 @@ function validateCommand(commandConfig, options) {
 
 module.exports = function* require() {
   yield preHook({
-    event: 'schema',
+    event: 'schematize',
     tags: ['modifyOptionSchema'],
   }, (schema) => {
     schema = modifySchema(schema)

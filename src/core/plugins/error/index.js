@@ -27,7 +27,7 @@ function* errorEndHandler(config, err, ...args) {
 }
 
 module.exports = function* error() {
-  let config = yield hook('config')
+  let config = yield hook('configure')
 
   yield preHookStart('error', (...args) => [config.value, ...args])
   yield hookStart('error', errorStartHandler)

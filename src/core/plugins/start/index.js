@@ -4,11 +4,11 @@ const {
 
 
 module.exports = function* start() {
-  let schema = yield hook('schema')
+  let schema = yield hook('schematize')
   let config
 
   yield preHookStart('start', function* () {
-    config = yield toot('config', schema.value, {})
+    config = yield toot('configure', schema.value, {})
     return [config]
   })
 

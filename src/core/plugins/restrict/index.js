@@ -31,7 +31,7 @@ function validateBatch(config, batch) {
 
 module.exports = function* restrict() {
   yield preHook({
-    event: 'schema',
+    event: 'schematize',
     tags: ['modifyCommandSchema'],
   }, (schema) => {
     schema = modifySchema(schema)

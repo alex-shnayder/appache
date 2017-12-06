@@ -34,7 +34,7 @@ function addAliasesToConfig(config) {
 
 module.exports = function* alias() {
   yield preHook({
-    event: 'config',
+    event: 'configure',
     tags: ['modifyCommandConfig', 'modifyOptionConfig'],
     goesAfter: ['modifyConfig'],
   }, (schema, config) => {

@@ -15,7 +15,7 @@ function coerceOption(option) {
 
 module.exports = function* coerce() {
   yield preHook({
-    event: 'schema',
+    event: 'schematize',
     tags: ['modifyOptionSchema'],
   }, (schema) => {
     schema = modifySchema(schema)

@@ -3,7 +3,7 @@ const assignConfigs = require('./assignConfigs')
 
 
 module.exports = function* identify() {
-  let config = yield hook('config')
+  let config = yield hook('configure')
 
   yield preHookStart('identify', function(batch) {
     let _config = config.value

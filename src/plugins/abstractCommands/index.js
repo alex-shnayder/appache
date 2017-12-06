@@ -16,7 +16,7 @@ function dontHandleAbstractCommand(_, command) {
 
 module.exports = function* abstractCommands() {
   yield preHook({
-    event: 'schema',
+    event: 'schematize',
     tags: ['modifyCommandSchema'],
   }, (schema) => {
     schema = modifySchema(schema)

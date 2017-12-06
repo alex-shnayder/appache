@@ -1,5 +1,5 @@
 {
-  "schema": {
+  "schematize": {
     "mode": "sync",
     "tags": {
       "modifySchema": {},
@@ -11,7 +11,7 @@
       }
     }
   },
-  "init": {
+  "initialize": {
     "mode": "sync",
     "tags": {
       "api": {}
@@ -29,7 +29,7 @@
   "stop": {
     "mode": "sync"
   },
-  "config": {
+  "configure": {
     "mode": "sync",
     "tags": {
       "createConfig": {},

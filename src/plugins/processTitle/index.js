@@ -13,5 +13,5 @@ function setProcessTitle(config) {
 }
 
 module.exports = function* processTitle() {
-  yield postHookEnd('config', setProcessTitle)
+  yield postHookEnd('configure', setProcessTitle)
 }

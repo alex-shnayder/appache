@@ -12,7 +12,7 @@ describe('error plugin', () => {
 
     assert.deepStrictEqual(result.value, {
       effect: 'hook',
-      event: 'config',
+      event: 'configure',
       fn: undefined,
       routineMode: 'result',
     })

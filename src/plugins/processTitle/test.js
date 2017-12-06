@@ -10,7 +10,7 @@ describe('processTitle plugin', () => {
 
     assert.deepStrictEqual(value, {
       effect: 'hook',
-      event: 'config',
+      event: 'configure',
       priority: 'end',
       fn: setProcessTitle,
       routineMode: 'post',

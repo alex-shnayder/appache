@@ -6,7 +6,7 @@ const finalizeConfig = require('./finalizeConfig')
 
 module.exports = function* config() {
   yield preHook({
-    event: 'config',
+    event: 'configure',
     tags: ['modifyCommandConfig', 'modifyOptionConfig'],
     goesAfter: ['owner:inherit'],
     goesBefore: ['modifyCommandConfig', 'modifyOptionConfig'],
@@ -16,7 +16,7 @@ module.exports = function* config() {
   })
 
   yield preHook({
-    event: 'config',
+    event: 'configure',
     tags: ['modifyCommandConfig', 'modifyOptionConfig'],
     goesAfter: ['modifyConfig'],
   }, (schema, config) => {
@@ -24,7 +24,7 @@ module.exports = function* config() {
     return [schema, config]
   })
 
-  yield hookEnd('config', (schema, config) => {
+  yield hookEnd('configure', (schema, config) => {
     validateConfig(schema, config)
     return config
   })
