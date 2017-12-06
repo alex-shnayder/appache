@@ -1,9 +1,9 @@
-const { preHookStart, hookEnd, toot } = require('hooter/effects')
+const { preHookStart, hookEnd, schematize } = require('../../effects')
 
 
 module.exports = function* initialize() {
   yield preHookStart('initialize', function* () {
-    let schema = yield toot('schematize')
+    let schema = yield schematize()
     return [schema]
   })
 

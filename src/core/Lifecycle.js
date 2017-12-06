@@ -114,6 +114,22 @@ function updateHandlerTags(handler) {
 
 
 class LifecycleProxy extends Hooter.HooterProxy {
+  constructor(...args) {
+    super(...args)
+
+    let { events } = this.source
+
+    Object.keys(events).forEach((event) => {
+      if (this[event]) {
+        throw new Error(
+          `Event "${event}" conflicts with the same-named method of Lifecycle`
+        )
+      }
+
+      this[event] = events[event]
+    })
+  }
+
   createHandler(...args) {
     let handler = super.createHandler(...args)
     return updateHandlerTags(handler)

@@ -1,6 +1,6 @@
 const {
-  hook, preHookStart, hookEnd, toot,
-} = require('hooter/effects')
+  hook, preHookStart, hookEnd, configure, activate,
+} = require('../../effects')
 
 
 module.exports = function* start() {
@@ -8,12 +8,12 @@ module.exports = function* start() {
   let config
 
   yield preHookStart('start', function* () {
-    config = yield toot('configure', schema.value, {})
+    config = yield configure(schema.value, {})
     return [config]
   })
 
   yield hookEnd('start', function* (config) {
-    yield toot('activate', config)
+    yield activate(config)
     return config
   })
 }
