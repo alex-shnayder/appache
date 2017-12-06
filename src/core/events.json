@@ -1,6 +1,14 @@
 {
+  "initialize": {
+    "mode": "sync",
+    "restricted": true,
+    "tags": {
+      "api": {}
+    }
+  },
   "schematize": {
     "mode": "sync",
+    "restricted": true,
     "tags": {
       "modifySchema": {},
       "modifyCommandSchema": {
@@ -11,26 +19,25 @@
       }
     }
   },
-  "initialize": {
-    "mode": "sync",
-    "tags": {
-      "api": {}
-    }
-  },
   "start": {
-    "mode": "sync"
+    "mode": "sync",
+    "restricted": false
   },
   "activate": {
-    "mode": "sync"
+    "mode": "sync",
+    "restricted": false
   },
   "deactivate": {
-    "mode": "sync"
+    "mode": "sync",
+    "restricted": false
   },
   "stop": {
-    "mode": "sync"
+    "mode": "sync",
+    "restricted": false
   },
   "configure": {
     "mode": "sync",
+    "restricted": true,
     "tags": {
       "createConfig": {},
       "modifyConfig": {
@@ -54,6 +61,7 @@
   },
   "execute": {
     "mode": "async",
+    "restricted": false,
     "tags": {
       "modifyBatch": {},
       "addCommand": {
@@ -81,6 +89,7 @@
   },
   "identify": {
     "mode": "async",
+    "restricted": false,
     "tags": {
       "modifyBatch": {},
       "modifyCommand": {
@@ -99,6 +108,7 @@
   },
   "process": {
     "mode": "async",
+    "restricted": true,
     "tags": {
       "modifyCommand": {},
       "addOption": {
@@ -115,12 +125,14 @@
   },
   "dispatch": {
     "mode": "async",
+    "restricted": true,
     "tags": {
       "tapCommand": {},
       "handleCommand": {}
     }
   },
   "error": {
-    "mode": "sync"
+    "mode": "sync",
+    "restricted": false
   }
 }

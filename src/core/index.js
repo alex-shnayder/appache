@@ -16,14 +16,25 @@ const corePlugins = [
 ]
 
 
-const HOOTER_SETTINGS = { events }
+const HOOTER_SETTINGS = {
+  events: {},
+}
 const CORE_PLUGIN_SETTINGS = {
   required: true,
 }
 const PLUGIN_SETTINGS = {
   registeredEventsOnly: true,
-  disallowedEvents: ['schematize', 'configure', 'process', 'dispatch'],
+  disallowedEvents: [],
 }
+
+
+Object.keys(events).forEach((eventName) => {
+  HOOTER_SETTINGS.events[eventName] = { mode: events[eventName].mode }
+
+  if (events[eventName].restricted) {
+    PLUGIN_SETTINGS.disallowedEvents.push(eventName)
+  }
+})
 
 
 module.exports = function appacheCore(plugins) {
