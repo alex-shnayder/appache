@@ -1,5 +1,16 @@
-const { assignDefaults: assignItemDefaults } = require('../../common')
+function assignItemDefaults(itemSchema, item) {
+  item = Object.assign({}, item)
 
+  Object.keys(itemSchema.properties).forEach((key) => {
+    let prop = itemSchema.properties[key]
+    if (typeof prop.default !== 'undefined' &&
+        typeof item[key] === 'undefined') {
+      item[key] = prop.default
+    }
+  })
+
+  return item
+}
 
 module.exports = function assignDefaults(schema, config) {
   let { commands, options } = config

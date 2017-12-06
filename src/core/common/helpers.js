@@ -176,34 +176,20 @@ function getCommandFromEvent(event) {
   }
 }
 
-function assignDefaults(itemSchema, item) {
-  item = Object.assign({}, item)
-
-  Object.keys(itemSchema.properties).forEach((key) => {
-    let prop = itemSchema.properties[key]
-    if (typeof prop.default !== 'undefined' &&
-        typeof item[key] === 'undefined') {
-      item[key] = prop.default
-    }
-  })
-
-  return item
+function createCommand(config, command) {
+  let commands = config.commands ? config.commands.concat(command) : [command]
+  return Object.assign({}, config, { commands })
 }
 
-function createCommand(schema, command) {
-  let commandSchema = schema.definitions.command
-  return assignDefaults(commandSchema, command)
-}
-
-function createOption(schema, option) {
-  let optionSchema = schema.definitions.option
-  return assignDefaults(optionSchema, option)
+function createOption(config, option) {
+  let options = config.options ? config.options.concat(option) : [option]
+  return Object.assign({}, config, { options })
 }
 
 
 module.exports = {
   findByIds, findOneById, findOneByNames, findCommandById, findOptionById,
   findRootCommands, findDefaultRootCommand, populateCommand, updateCommandById,
-  updateOptionById, optionsToObject, getCommandFromEvent, assignDefaults,
-  createCommand, createOption,
+  updateOptionById, optionsToObject, getCommandFromEvent, createCommand,
+  createOption,
 }
