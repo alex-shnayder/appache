@@ -1,1 +1,1 @@
-module.exports = require('hooter/effects')
+module.exports = require('./src/core/effects')
