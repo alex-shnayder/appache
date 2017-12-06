@@ -17,7 +17,7 @@ module.exports = function* config() {
 
   yield preHook({
     event: 'config',
-    tags: ['modifyCommandConfig'],
+    tags: ['modifyCommandConfig', 'modifyOptionConfig'],
     goesAfter: ['modifyConfig'],
   }, (schema, config) => {
     config = finalizeConfig(schema, config)
