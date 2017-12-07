@@ -176,13 +176,27 @@ function getCommandFromEvent(event) {
   }
 }
 
-function createCommand(config, command) {
-  let commands = config.commands ? config.commands.concat(command) : [command]
+function injectCommand(config, command) {
+  let commands = config.commands ? config.commands.slice() : []
+
+  if (Array.isArray(command)) {
+    commands.push(...command)
+  } else {
+    commands.push(command)
+  }
+
   return Object.assign({}, config, { commands })
 }
 
-function createOption(config, option) {
-  let options = config.options ? config.options.concat(option) : [option]
+function injectOption(config, option) {
+  let options = config.options ? config.options.slice() : []
+
+  if (Array.isArray(option)) {
+    options.push(...option)
+  } else {
+    options.push(option)
+  }
+
   return Object.assign({}, config, { options })
 }
 
@@ -190,6 +204,6 @@ function createOption(config, option) {
 module.exports = {
   findByIds, findOneById, findOneByNames, findCommandById, findOptionById,
   findRootCommands, findDefaultRootCommand, populateCommand, updateCommandById,
-  updateOptionById, optionsToObject, getCommandFromEvent, createCommand,
-  createOption,
+  updateOptionById, optionsToObject, getCommandFromEvent, injectCommand,
+  injectOption,
 }
