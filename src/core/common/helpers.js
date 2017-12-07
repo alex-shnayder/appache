@@ -200,10 +200,28 @@ function injectOption(config, option) {
   return Object.assign({}, config, { options })
 }
 
+function mergeConfigs(...configs) {
+  return configs.reduce((result, config) => {
+    Object.keys(config).forEach((key) => {
+      if (key === 'commands' || key === 'options') {
+        if (result[key]) {
+          result[key].push(...config[key])
+        } else {
+          result[key] = config[key].slice()
+        }
+      } else {
+        result[key] = config[key]
+      }
+    })
+
+    return result
+  }, {})
+}
+
 
 module.exports = {
   findByIds, findOneById, findOneByNames, findCommandById, findOptionById,
   findRootCommands, findDefaultRootCommand, populateCommand, updateCommandById,
   updateOptionById, optionsToObject, getCommandFromEvent, injectCommand,
-  injectOption,
+  injectOption, mergeConfigs,
 }
