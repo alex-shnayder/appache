@@ -35,6 +35,8 @@ function findCommandById(config, id, populate) {
   if (command && populate) {
     return populateCommand(config, command)
   }
+
+  return command
 }
 
 function findOptionById(config, id) {
