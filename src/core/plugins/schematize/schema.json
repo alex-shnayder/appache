@@ -38,7 +38,7 @@
           }
         },
         "defaultCommand": {
-          "$ref": "#/definitions/command/properties/name"
+          "$ref": "#/definitions/command/properties/id"
         },
         "commands": {
           "type": "array",
@@ -120,7 +120,7 @@
       }
     },
     "defaultCommand": {
-      "$ref": "#/definitions/command/properties/name"
+      "$ref": "#/definitions/command/properties/id"
     }
   },
   "required": ["commands"]
