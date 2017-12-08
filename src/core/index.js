@@ -13,6 +13,7 @@ const corePlugins = [
   require('./plugins/identify'),
   require('./plugins/api'),
   require('./plugins/restrict'),
+  require('./plugins/share'),
 ]
 
 
