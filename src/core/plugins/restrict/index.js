@@ -26,7 +26,7 @@ function validateBatch(config, batch) {
   batch.reduce((parent, command) => {
     validateCommand(config, parent, command)
     return command
-  })
+  }, null)
 }
 
 module.exports = function* restrict() {
