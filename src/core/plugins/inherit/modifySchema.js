@@ -12,7 +12,7 @@ const COMMAND_PROPERTIES = {
   inheritableOptions: {
     type: 'array',
     items: {
-      type: 'string',
+      $ref: '#/definitions/option/properties/name',
     },
     default: [],
   },
