@@ -14,7 +14,10 @@ module.exports = function* identify() {
       )
     }
 
-    this.source = this.tooter
+    if (!this.source) {
+      this.source = this.tooter
+    }
+
     return [_config, batch]
   })
 

@@ -1,33 +1,7 @@
 const { preHook } = require('hooter/effects')
-const { InputError } = require('../../common')
 const modifySchema = require('./modifySchema')
-const handleUndefinedCommand = require('./handleUndefinedCommand')
+const validateBatch = require('./validateBatch')
 
-
-function validateCommand(config, parent, command) {
-  let { options, config: cmdConfig } = command
-
-  if (!cmdConfig) {
-    return handleUndefinedCommand(config, parent, command)
-  }
-
-  if (cmdConfig.strict) {
-    let undefinedOption = options.find((option) => !option.config)
-
-    if (undefinedOption) {
-      let e = new InputError(`Undefined option "${undefinedOption.inputName}"`)
-      e.command = command
-      throw e
-    }
-  }
-}
-
-function validateBatch(config, batch) {
-  batch.reduce((parent, command) => {
-    validateCommand(config, parent, command)
-    return command
-  }, null)
-}
 
 module.exports = function* restrict() {
   yield preHook({
@@ -40,7 +14,7 @@ module.exports = function* restrict() {
 
   yield preHook({
     event: 'execute',
-    goesAfter: ['assignCommandConfig', 'assignOptionConfig'],
+    goesAfter: ['identify'],
     goesBefore: ['process'],
   }, validateBatch)
 }
