@@ -1,21 +1,70 @@
 const { preHook } = require('hooter/effects')
-const { InputError } = require('../../core/common')
+const { InputError, findByIds } = require('../../core/common')
 const modifySchema = require('./modifySchema')
 
 
-function validateCommand(commandConfig, options) {
-  commandConfig.options.forEach((optionConfig) => {
-    if (optionConfig.required) {
-      let option = options.find((option) => {
-        return option.config && option.config.id === optionConfig.id
-      })
+function getRequiredOptionsForCommand(config, command) {
+  let { requiredOptions, options } = command
+  let requireAll = false
 
-      if (!option || option.value === null) {
-        throw new InputError(`Option "${optionConfig.name}" is required`)
+  if (requiredOptions === true) {
+    requireAll = true
+    requiredOptions = []
+  } else if (!requiredOptions) {
+    requiredOptions = []
+  } else {
+    requiredOptions = requiredOptions.slice()
+  }
+
+  if (options) {
+    findByIds(config.options, options).forEach(({ name, required }) => {
+      if (required === false) {
+        requiredOptions = requiredOptions.filter((n) => n !== name)
+      } else if ((required || requireAll) && !requiredOptions.includes(name)) {
+        requiredOptions.push(name)
       }
+    })
+  }
+
+  return requiredOptions
+}
+
+function normalizeConfig(config) {
+  let { commands } = config
+
+  if (commands && commands.length) {
+    commands = commands.map((command) => {
+      let requiredOptions = getRequiredOptionsForCommand(config, command)
+      return Object.assign({}, command, { requiredOptions })
+    })
+    config = Object.assign({}, config, { commands })
+  }
+
+  return config
+}
+
+function validateCommand(config, command) {
+  let { config: commandConfig, options, inputName, name } = command
+  let { requiredOptions } = commandConfig
+
+  if (!requiredOptions) {
+    return
+  }
+
+  requiredOptions.forEach((requiredOptionName) => {
+    let requiredOption = options.find((option) => {
+      return option.config && option.config.name === requiredOptionName
+    })
+
+    if (!requiredOption) {
+      throw new InputError(
+        `Option "${requiredOptionName}" is required, ` +
+        `but not present on command "${inputName || name}"`
+      )
     }
   })
 }
+
 
 module.exports = function* require() {
   yield preHook({
@@ -27,11 +76,18 @@ module.exports = function* require() {
   })
 
   yield preHook({
+    event: 'configure',
+    tags: ['modifyCommandConfig'],
+    goesAfter: ['modifyCommandConfig'],
+  }, (schema, config) => {
+    config = normalizeConfig(config)
+    return [schema, config]
+  })
+
+  yield preHook({
     event: 'process',
     goesAfter: ['modifyOption'],
-  }, (_, { config, options }) => {
-    if (config && config.options && config.options.length) {
-      validateCommand(config, options)
-    }
+  }, (config, command) => {
+    validateCommand(config, command)
   })
 }

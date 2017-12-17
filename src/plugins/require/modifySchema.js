@@ -1,15 +1,27 @@
 const { assign } = require('../../core/common')
 
 
+const COMMAND_PROPERTIES = {
+  requiredOptions: {
+    oneOf: [{
+      type: 'boolean',
+    }, {
+      type: 'array',
+      items: {
+        $ref: '#/definitions/option/properties/name',
+      },
+    }],
+    default: false,
+  },
+}
 const OPTION_PROPERTIES = {
   required: {
     type: 'boolean',
-    default: false,
   },
 }
 
 
 module.exports = function modifySchema(schema) {
-  schema = assign(schema, 'definitions.option.properties', OPTION_PROPERTIES)
-  return schema
+  schema = assign(schema, 'definitions.command.properties', COMMAND_PROPERTIES)
+  return assign(schema, 'definitions.option.properties', OPTION_PROPERTIES)
 }

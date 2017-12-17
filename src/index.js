@@ -2,6 +2,7 @@
 
 const core = require('./core')
 const defaultPlugins = [
+  require('./plugins/alias'),
   require('./plugins/require'),
   require('./plugins/coerce'),
   require('./plugins/validate'),
@@ -11,7 +12,6 @@ const defaultPlugins = [
   require('./plugins/defaultValues'),
   require('./plugins/processTitle'),
   require('./plugins/abstractCommands'),
-  require('./plugins/alias'),
 ]
 
 
