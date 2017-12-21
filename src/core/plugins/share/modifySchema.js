@@ -6,7 +6,7 @@ const COMMAND_PROPERTIES = {
     type: ['boolean', 'array'],
     items: {
       oneOf: [{
-        $ref: '#/definitions/command/properties/name',
+        $ref: '#/definitions/option/properties/name',
       }, {
         type: 'string',
         enum: ['*'],
