@@ -1,58 +1,108 @@
-const {
-  findRootCommands, updateCommandById, populateCommand,
-} = require('../../common')
+const { findOneById, findByIds, mergeConfigs } = require('../../common')
 
 
-function inheritCommandSettings(
-  config, command, inheritedConfig, inheritedOptions
-) {
-  let { inheritableSettings, inheritableOptions, commands } = command
-  let hasInheritableSettings = inheritableSettings && inheritableSettings.length
+const DEFAULT = Symbol('default')
+const UNINHERITABLE_SETTINGS = ['name', 'commands']
 
-  if (!inheritedConfig && !inheritedOptions && !hasInheritableSettings) {
-    return config
-  }
 
-  let options = command.options ? command.options : []
-  options = inheritedOptions ? options.concat(inheritedOptions) : options
+function extractInheritableConfig(config, item) {
+  let { inheritableSettings, inheritableOptions, options } = item
+  let result = {}
 
-  if (inheritedConfig) {
-    command = Object.assign({}, inheritedConfig, command, { options })
-    config = updateCommandById(config, command.id, command, true)
-    inheritableSettings = command.inheritableSettings
-    inheritableOptions = command.inheritableOptions
-  }
-
-  if (commands && commands.length) {
-    let inheritableConfig = inheritableSettings.reduce((_config, key) => {
-      if (typeof command[key] !== 'undefined') {
-        _config[key] = command[key]
-      } else if (inheritedConfig) {
-        _config[key] = inheritedConfig[key]
-      }
-
-      return _config
-    }, {})
-
-    command = populateCommand(config, command)
-    command.commands.forEach((subcommand) => {
-      config = inheritCommandSettings(
-        config, subcommand, inheritableConfig, inheritableOptions
-      )
+  if (inheritableSettings === true) {
+    Object.assign(result, item)
+    UNINHERITABLE_SETTINGS.forEach((setting) => {
+      delete result[setting]
+    })
+  } else if (inheritableSettings) {
+    inheritableSettings.forEach((key) => {
+      result[key] = item[key]
     })
   }
 
-  return config
+  if (inheritableOptions === true) {
+    result.options = options
+  } else if (inheritableOptions) {
+    result.options = result.options ? result.options.slice() : []
+    inheritableOptions.forEach((optionId) => {
+      if (!result.options.includes(optionId)) {
+        result.options.push(optionId)
+      }
+    })
+  }
+
+  if (options && config.options) {
+    options = findByIds(config.options, options)
+    result.options = result.options ? result.options.slice() : []
+    options.forEach((option) => {
+      if (option.inheritable && !result.options.includes(option.id)) {
+        result.options.push(option.id)
+      }
+    })
+  }
+
+  delete result.extends
+  return result
+}
+
+// Mutates inheritableConfigs and visitedItems
+function buildConfig(
+  config, items, item, inheritableConfigs = {}, visitedItems = []
+) {
+  let { id } = item
+
+  if (visitedItems.includes(id)) {
+    throw new Error(`Item "${id}" has cyclic dependencies`)
+  }
+
+  let _extends = item.extends || DEFAULT
+  let inheritedConfig = inheritableConfigs[_extends]
+  visitedItems.push(id)
+
+  if (!inheritedConfig) {
+    let parent = findOneById(items, _extends)
+
+    if (!parent) {
+      throw new Error(`Item "${id}" tries to extend a non-existent item`)
+    }
+
+    parent = buildConfig(
+      config, items, parent, inheritableConfigs, visitedItems
+    )
+    inheritedConfig = extractInheritableConfig(config, parent)
+    inheritableConfigs[parent.id] = inheritedConfig
+  }
+
+  return mergeConfigs(inheritedConfig, item)
 }
 
 module.exports = function addInheritance(schema, config) {
-  let commands = findRootCommands(config)
+  let { commands, options } = config
 
-  if (commands.length) {
-    commands.forEach((command) => {
-      config = inheritCommandSettings(config, command)
+  if (commands) {
+    let commandSchemaProps = schema.definitions.command.properties
+    let commandConfigs = {
+      [DEFAULT]: {
+        inheritableSettings: commandSchemaProps.inheritableSettings.default,
+        inheritableOptions: commandSchemaProps.inheritableOptions.default,
+      },
+    }
+    commands = commands.map((command) => {
+      return buildConfig(config, commands, command, commandConfigs)
     })
   }
 
-  return config
+  if (options) {
+    let optionSchemaProps = schema.definitions.option.properties
+    let optionConfigs = {
+      [DEFAULT]: {
+        inheritableSettings: optionSchemaProps.inheritableSettings.default,
+      },
+    }
+    options = options.map((option) => {
+      return buildConfig(config, options, option, optionConfigs)
+    })
+  }
+
+  return Object.assign({}, config, { commands, options })
 }
