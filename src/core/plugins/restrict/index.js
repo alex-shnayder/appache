@@ -14,7 +14,7 @@ module.exports = function* restrict() {
 
   yield preHook({
     event: 'execute',
-    goesAfter: ['identify'],
-    goesBefore: ['process'],
+    goesAfter: ['identifyCommand', 'identifyOption'],
+    goesBefore: ['handleBatch'],
   }, validateBatch)
 }

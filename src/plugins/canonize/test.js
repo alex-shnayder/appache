@@ -1,5 +1,5 @@
 const assert = require('assert')
-const { processHandler, canonize } = require('./index?private')
+const { handler, canonize } = require('./index?private')
 const canonizePlugin = require('./index')
 
 
@@ -11,33 +11,41 @@ describe('canonize plugin', () => {
     assert.deepStrictEqual(value, {
       effect: 'hook',
       event: {
-        event: 'process',
+        event: 'execute',
         tags: ['modifyOption'],
       },
-      fn: processHandler,
+      fn: handler,
       routineMode: 'pre',
     })
   })
 
-  describe('process handler', () => {
+  describe('handler', () => {
     let config = {}
-    let command = {}
-    let generator = processHandler(config, command)
+    let batch = [{}, {}]
+    let resultBatch = [{}, {}]
+    let generator = handler(config, batch)
 
-    it('calls canonize', () => {
+    it('calls canonize for each command in the batch', () => {
       let { value } = generator.next()
 
       assert.deepStrictEqual(value, {
         effect: 'call',
         fn: canonize,
-        args: [command],
+        args: [batch[0]],
+      })
+
+      value = generator.next(resultBatch[0]).value
+
+      assert.deepStrictEqual(value, {
+        effect: 'call',
+        fn: canonize,
+        args: [batch[1]],
       })
     })
 
-    it('returns the modified args', () => {
-      let newCommand = {}
-      let result = [config, newCommand]
-      let { value, done } = generator.next(newCommand)
+    it('returns modified args', () => {
+      let result = [config, resultBatch]
+      let { value, done } = generator.next(resultBatch[1])
 
       assert.deepStrictEqual(value, result)
       assert(done)

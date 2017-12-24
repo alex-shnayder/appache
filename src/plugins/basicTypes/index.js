@@ -32,20 +32,23 @@ function processOption(option) {
   return Object.assign({}, option, { value })
 }
 
+function processCommand(command) {
+  let { options } = command
+
+  if (!options || !options.length) {
+    return command
+  }
+
+  options = options.map(processOption)
+  return Object.assign({}, command, { options })
+}
+
 module.exports = function* basicTypes() {
   yield preHook({
-    event: 'process',
+    event: 'execute',
     tags: ['modifyOption'],
-  }, (config, command) => {
-    let { options } = command
-
-    if (!options || !options.length) {
-      return
-    }
-
-    options = options.map(processOption)
-    command = Object.assign({}, command, { options })
-
-    return [config, command]
+  }, (config, batch) => {
+    batch = batch.map(processCommand)
+    return [config, batch]
   })
 }

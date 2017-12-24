@@ -67,59 +67,31 @@
       "addCommand": {
         "implies": ["modifyBatch"]
       },
+      "removeCommand": {
+        "implies": ["modifyBatch"]
+      },
       "modifyCommand": {
         "implies": ["modifyBatch"],
         "goesAfter": ["addCommand"]
       },
+      "identifyCommand": {
+        "implies": ["modifyCommand"]
+      },
       "addOption": {
+        "implies": ["modifyCommand"]
+      },
+      "removeOption": {
         "implies": ["modifyCommand"]
       },
       "modifyOption": {
         "implies": ["modifyCommand"],
         "goesAfter": ["addOption"]
       },
-      "identify": {
-        "implies": ["modifyCommand", "modifyOption"]
-      },
-      "process": {
-        "implies": ["modifyCommand", "modifyOption"],
-        "goesAfter": ["identify"]
-      }
-    }
-  },
-  "identify": {
-    "mode": "async",
-    "restricted": false,
-    "tags": {
-      "modifyBatch": {},
-      "modifyCommand": {
-        "implies": ["modifyBatch"]
-      },
-      "assignCommandConfig": {
-        "implies": ["modifyCommand"]
-      },
-      "modifyOption": {
-        "implies": ["modifyCommand"]
-      },
-      "assignOptionConfig": {
+      "identifyOption": {
         "implies": ["modifyOption"]
-      }
-    }
-  },
-  "process": {
-    "mode": "async",
-    "restricted": true,
-    "tags": {
-      "modifyCommand": {},
-      "addOption": {
-        "implies": ["modifyCommand"]
       },
-      "modifyOption": {
-        "implies": ["modifyCommand"],
-        "goesAfter": ["addOption"]
-      },
-      "handleCommand": {
-        "goesAfter": ["modifyCommand"]
+      "handleBatch": {
+        "goesAfter": ["modifyBatch"]
       }
     }
   },
@@ -127,7 +99,6 @@
     "mode": "async",
     "restricted": true,
     "tags": {
-      "tapCommand": {},
       "handleCommand": {}
     }
   },

@@ -11,9 +11,10 @@ const corePlugins = [
   require('./plugins/start'),
   require('./plugins/execute'),
   require('./plugins/identify'),
-  require('./plugins/api'),
   require('./plugins/restrict'),
+  require('./plugins/api'),
   require('./plugins/share'),
+  require('./plugins/dispatch'),
 ]
 
 

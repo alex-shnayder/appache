@@ -15,7 +15,7 @@ module.exports = function* share() {
   yield preHook({
     event: 'execute',
     tags: ['modifyCommand', 'modifyOption'],
-    goesAfter: ['identify'],
+    goesAfter: ['identifyOption'],
   }, (_, batch) => {
     batch = shareOptions(batch)
     return [_, batch]

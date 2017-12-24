@@ -171,9 +171,9 @@ function optionsToObject(options) {
 function getCommandFromEvent(event) {
   let { args, name } = event
 
-  if (name === 'execute' || name === 'identify') {
+  if (name === 'execute') {
     return args && args[1] && args[1][0]
-  } else if (name === 'process' || name === 'dispatch') {
+  } else if (name === 'dispatch') {
     return args && args[1]
   }
 }

@@ -1,57 +1,6 @@
-const {
-  next, toot, hook, hookEnd, preHook, preHookStart,
-} = require('hooter/effects')
-const { Result } = require('../../common')
-const normalizeBatch = require('./normalizeBatch')
-
-
-function* process(config, batch) {
-  let processEvent = {
-    name: 'process',
-    cb: (_, command) => command,
-    source: this.source,
-  }
-  let newBatch = []
-
-  for (let i = 0; i < batch.length; i++) {
-    let result = yield yield toot(processEvent, config, batch[i])
-
-    if (result instanceof Result) {
-      result.command = result.command || batch[i]
-      return result
-    }
-
-    if (!result || typeof result !== 'object') {
-      throw new Error(
-        'The result of processing a command must be a command object or an instance of Result'
-      )
-    }
-
-    newBatch[i] = result
-  }
-
-  return yield next(config, newBatch)
-}
-
-function* dispatch(config, batch) {
-  let context
-
-  for (let i = 0; i < batch.length; i++) {
-    context = yield yield toot({
-      name: 'dispatch',
-      args: [config, batch[i], context],
-      source: this.source,
-      isFinalCommand: !batch[i + 1],
-    })
-
-    if (context instanceof Result) {
-      context.command = context.command || batch[i]
-      return context
-    }
-  }
-
-  return new Result(context, batch[batch.length - 1])
-}
+const { hook, preHook, preHookStart } = require('hooter/effects')
+const { InputError } = require('../../common')
+const { normalizeBatchCommands, normalizeBatchOptions } = require('./normalize')
 
 
 module.exports = function* execute() {
@@ -66,37 +15,29 @@ module.exports = function* execute() {
       )
     }
 
+    if (!Array.isArray(batch) || batch.length === 0) {
+      throw new InputError('A batch must be an array of commands')
+    }
+
     this.source = this.tooter
     return [_config, batch]
   })
 
   yield preHook({
     event: 'execute',
-    tags: ['modifyBatch', 'modifyCommand', 'modifyOption'],
-    goesBefore: ['modifyBatch'],
+    tags: ['modifyCommand'],
+    goesBefore: ['modifyCommand'],
   }, (config, batch) => {
-    batch = normalizeBatch(batch)
+    batch = normalizeBatchCommands(batch)
     return [config, batch]
   })
 
   yield preHook({
     event: 'execute',
-    tags: ['identify'],
-  }, function* (config, batch) {
-    batch = yield yield toot({
-      name: 'identify',
-      source: this.source,
-      args: [batch],
-    })
+    tags: ['modifyOption'],
+    goesBefore: ['modifyOption'],
+  }, (config, batch) => {
+    batch = normalizeBatchOptions(batch)
     return [config, batch]
   })
-
-  yield hook({
-    event: 'execute',
-    tags: ['process'],
-  }, process)
-
-  yield hookEnd('execute', dispatch)
-
-  yield hookEnd('dispatch', (config, command, context) => context)
 }

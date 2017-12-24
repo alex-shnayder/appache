@@ -16,7 +16,7 @@ function assignOptionConfig(optionConfigs, option) {
 }
 
 function assignCommandConfig(config, commandConfigs, defCommand, command) {
-  let { name, inputName, options } = command
+  let { name, inputName } = command
 
   if (!name || typeof name !== 'string') {
     throw new InputError(`Command "${inputName}" has an invalid name`)
@@ -32,19 +32,10 @@ function assignCommandConfig(config, commandConfigs, defCommand, command) {
   command = Object.assign({}, command)
   command.config = commandConfig
 
-  let optionIds = commandConfig.options
-
-  if (optionIds && optionIds.length && options.length) {
-    let optionConfigs = findByIds(config.options, optionIds)
-    command.options = optionConfigs && options.map((option) => {
-      return assignOptionConfig(optionConfigs, option)
-    })
-  }
-
   return command
 }
 
-module.exports = function assignConfigs(config, batch) {
+function assignCommandConfigs(config, batch) {
   let commands = findRootCommands(config)
   let { defaultCommand: defCommand } = config
 
@@ -56,3 +47,25 @@ module.exports = function assignConfigs(config, batch) {
     return command
   })
 }
+
+function assignOptionConfigs(config, batch) {
+  return batch.map((command) => {
+    let { options, config: commandConfig } = command
+    let optionIds = commandConfig && commandConfig.options
+
+    if (optionIds && optionIds.length && options.length) {
+      let optionConfigs = findByIds(config.options, optionIds)
+
+      if (optionConfigs && optionConfigs.length) {
+        command = Object.assign({}, command)
+        command.options = options.map((option) => {
+          return assignOptionConfig(optionConfigs, option)
+        })
+      }
+    }
+
+    return command
+  })
+}
+
+module.exports = { assignCommandConfigs, assignOptionConfigs }

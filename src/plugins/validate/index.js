@@ -13,9 +13,12 @@ module.exports = function* validate() {
   })
 
   yield preHook({
-    event: 'process',
+    event: 'execute',
     goesAfter: ['modifyOption'],
-  }, (_, command) => {
-    validateCommand(command)
+    goesBefore: ['handleBatch'],
+  }, (config, batch) => {
+    batch.forEach((command) => {
+      validateCommand(command)
+    })
   })
 }

@@ -13,6 +13,21 @@ function coerceOption(option) {
   return Object.assign({}, option, { value })
 }
 
+function handler(config, batch) {
+  batch = batch.map((command) => {
+    let options = command.options
+
+    if (options) {
+      command = Object.assign({}, command)
+      command.options = options.map((option) => coerceOption(option))
+    }
+
+    return command
+  })
+
+  return [config, batch]
+}
+
 module.exports = function* coerce() {
   yield preHook({
     event: 'schematize',
@@ -23,16 +38,7 @@ module.exports = function* coerce() {
   })
 
   yield preHook({
-    event: 'process',
+    event: 'execute',
     tags: ['modifyOption'],
-  }, (_, command, ...args) => {
-    let options = command.options
-
-    if (options) {
-      command = Object.assign({}, command)
-      command.options = options.map((option) => coerceOption(option))
-    }
-
-    return [_, command, ...args]
-  })
+  }, handler)
 }

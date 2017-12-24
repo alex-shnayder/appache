@@ -20,14 +20,19 @@ function canonize(command) {
   return command
 }
 
-function* processHandler(config, command, ...args) {
-  command = yield call(canonize, command)
-  return [config, command, ...args]
+function* handler(config, batch) {
+  let newBatch = []
+
+  for (let i = 0; i < batch.length; i++) {
+    newBatch[i] = yield call(canonize, batch[i])
+  }
+
+  return [config, newBatch]
 }
 
 module.exports = function* canonize() {
   yield preHook({
-    event: 'process',
+    event: 'execute',
     tags: ['modifyOption'],
-  }, processHandler)
+  }, handler)
 }

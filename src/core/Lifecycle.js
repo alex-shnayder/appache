@@ -169,7 +169,7 @@ class LifecycleProxy extends Hooter.HooterProxy {
     let hook = this._createTapOrHandleHook(command, handler, false)
     return this.hook({
       event: 'dispatch',
-      tags: ['tapCommand'],
+      tags: ['handleCommand'],
     }, hook)
   }
 
@@ -177,7 +177,7 @@ class LifecycleProxy extends Hooter.HooterProxy {
     let hook = this._createTapOrHandleHook(command, handler)
     this.hook({
       event: 'dispatch',
-      tags: ['handleCommand', 'tapCommand'],
+      tags: ['handleCommand'],
     }, hook)
   }
 }
