@@ -74,12 +74,30 @@ function findRootCommands(config, populate) {
   return commands
 }
 
-function findDefaultRootCommand(config) {
-  if (!config.defaultCommand) {
+function findDefaultCommand(config, command) {
+  let commands
+
+  if (!command) {
+    commands = findRootCommands(config)
+  } else if (command.defaultCommand) {
+    return findCommandById(config, command.defaultCommand)
+  } else if (command.commands) {
+    commands = findByIds(config.commands, command.commands)
+  } else {
     return
   }
-  let rootCommands = findRootCommands(config)
-  return findOneByNames(rootCommands, config.defaultCommand)
+
+  return commands.find((command) => command.default)
+}
+
+function findDefaultOption(config, command) {
+  let { defaultOption, options } = command
+
+  if (defaultOption) {
+    return findOptionById(config, defaultOption)
+  } else if (options) {
+    return findByIds(config.options, options).find((o) => o.default)
+  }
 }
 
 function populateCommand(config, command) {
@@ -223,7 +241,7 @@ function mergeConfigs(...configs) {
 
 module.exports = {
   findByIds, findOneById, findOneByNames, findCommandById, findOptionById,
-  findRootCommands, findDefaultRootCommand, populateCommand, updateCommandById,
-  updateOptionById, optionsToObject, getCommandFromEvent, injectCommand,
-  injectOption, mergeConfigs,
+  findRootCommands, findDefaultCommand, findDefaultOption, populateCommand,
+  updateCommandById, updateOptionById, optionsToObject, getCommandFromEvent,
+  injectCommand, injectOption, mergeConfigs,
 }
