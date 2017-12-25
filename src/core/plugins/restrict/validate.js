@@ -13,7 +13,7 @@ function validateCommands(config, batch) {
 
 function validateOptions(config, batch) {
   batch.forEach((command) => {
-    let { options } = command.options
+    let { options } = command
     let undefinedOption = options && options.find((option) => !option.config)
 
     if (undefinedOption) {
