@@ -26,12 +26,17 @@ function assignCommandConfig(config, commandConfigs, defCommand, command) {
 
 function assignCommandConfigs(config, batch) {
   let commands = findRootCommands(config)
-  let { defaultCommand: defCommand } = config
+  let defaultCommand
 
   return batch.map((command) => {
-    defCommand = defCommand && findCommandById(config, defCommand)
-    command = assignCommandConfig(config, commands, defCommand, command)
-    ;({ commands, defaultCommand: defCommand } = command.config || {})
+    if (defaultCommand) {
+      defaultCommand = findCommandById(config, defaultCommand)
+    } else {
+      defaultCommand = commands.find((command) => command.default)
+    }
+
+    command = assignCommandConfig(config, commands, defaultCommand, command)
+    ;({ commands, defaultCommand } = command.config || {})
     commands = commands && findByIds(config.commands, commands)
     return command
   })
@@ -72,7 +77,12 @@ function assignOptionConfigs(config, batch) {
     if (options && options.length) {
       let optionIds = commandConfig.options
       let optionConfigs = optionIds && findByIds(config.options, optionIds)
-      defaultOption = findOptionById(config, defaultOption)
+
+      if (defaultOption) {
+        defaultOption = findOptionById(config, defaultOption)
+      } else if (optionConfigs) {
+        defaultOption = optionConfigs.find((option) => option.default)
+      }
 
       command = Object.assign({}, command)
       command.options = options.map((option) => {

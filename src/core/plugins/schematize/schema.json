@@ -37,6 +37,9 @@
             "$ref": "#/definitions/command/properties/name"
           }
         },
+        "default": {
+          "type": "boolean"
+        },
         "defaultCommand": {
           "$ref": "#/definitions/command/properties/id"
         },
@@ -96,6 +99,9 @@
           "items": {
             "$ref": "#/definitions/option/properties/name"
           }
+        },
+        "default": {
+          "type": "boolean"
         }
       },
       "required": ["id", "name"]
