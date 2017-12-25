@@ -1,20 +1,17 @@
 const { preHook } = require('hooter/effects')
-const modifySchema = require('./modifySchema')
-const validateBatch = require('./validateBatch')
+const { validateCommands, validateOptions } = require('./validate')
 
 
 module.exports = function* restrict() {
   yield preHook({
-    event: 'schematize',
-    tags: ['modifyCommandSchema'],
-  }, (schema) => {
-    schema = modifySchema(schema)
-    return [schema]
-  })
+    event: 'execute',
+    goesAfter: ['identifyCommand'],
+    goesBefore: ['identifyOption'],
+  }, validateCommands)
 
   yield preHook({
     event: 'execute',
-    goesAfter: ['identifyCommand', 'identifyOption'],
+    goesAfter: ['identifyOption'],
     goesBefore: ['handleBatch'],
-  }, validateBatch)
+  }, validateOptions)
 }
