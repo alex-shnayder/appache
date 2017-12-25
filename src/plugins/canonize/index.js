@@ -12,7 +12,7 @@ function canonize(command) {
       }
 
       option = Object.assign({}, option)
-      option.name = option.config.name
+      option.name = option.config.name || option.name
       return option
     })
   }

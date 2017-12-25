@@ -40,6 +40,9 @@
         "defaultCommand": {
           "$ref": "#/definitions/command/properties/id"
         },
+        "defaultOption": {
+          "$ref": "#/definitions/option/properties/id"
+        },
         "commands": {
           "type": "array",
           "uniqueItems": true,

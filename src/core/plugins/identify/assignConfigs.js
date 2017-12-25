@@ -1,19 +1,8 @@
 const {
-  InputError, findByIds, findOneByNames, findRootCommands, findCommandById,
+  InputError, findByIds, findOneByNames, findRootCommands,
+  findCommandById, findOptionById,
 } = require('../../common')
 
-
-function assignOptionConfig(optionConfigs, option) {
-  let { name, inputName } = option
-
-  if (!name || typeof name !== 'string') {
-    throw new InputError(`Option "${inputName}" has an invalid name`)
-  }
-
-  option = Object.assign({}, option)
-  option.config = findOneByNames(optionConfigs, name)
-  return option
-}
 
 function assignCommandConfig(config, commandConfigs, defCommand, command) {
   let { name, inputName } = command
@@ -25,12 +14,10 @@ function assignCommandConfig(config, commandConfigs, defCommand, command) {
   let commandConfig = commandConfigs && findOneByNames(commandConfigs, name)
   commandConfig = commandConfig || defCommand
 
-  if (!commandConfig) {
-    return command
+  if (commandConfig) {
+    command = Object.assign({}, command)
+    command.config = commandConfig
   }
-
-  command = Object.assign({}, command)
-  command.config = commandConfig
 
   return command
 }
@@ -48,24 +35,50 @@ function assignCommandConfigs(config, batch) {
   })
 }
 
+function assignOptionConfig(optionConfigs, defaultOption, option) {
+  let { name, inputName } = option
+
+  if (!name || typeof name !== 'string') {
+    throw new InputError(`Option "${inputName}" has an invalid name`)
+  }
+
+  let optionConfig = optionConfigs && findOneByNames(optionConfigs, name)
+
+  if (!optionConfig && defaultOption) {
+    optionConfig = Object.assign({}, defaultOption)
+    // There must be a better way to tell other plugins not to use the name
+    // from the option's config
+    delete optionConfig.name
+    delete optionConfig.aliases
+  }
+
+  if (optionConfig) {
+    option = Object.assign({}, option)
+    option.config = optionConfig
+  }
+
+  return option
+}
+
 function assignOptionConfigs(config, batch) {
   return batch.map((command) => {
     let { options, config: commandConfig } = command
-    let optionIds = commandConfig && commandConfig.options
+    let { defaultOption } = commandConfig
 
-    if (optionIds && optionIds.length && options.length) {
-      let optionConfigs = findByIds(config.options, optionIds)
+    if (options && options.length) {
+      let optionIds = commandConfig.options
+      let optionConfigs = optionIds && findByIds(config.options, optionIds)
+      defaultOption = findOptionById(config, defaultOption)
 
-      if (optionConfigs && optionConfigs.length) {
-        command = Object.assign({}, command)
-        command.options = options.map((option) => {
-          return assignOptionConfig(optionConfigs, option)
-        })
-      }
+      command = Object.assign({}, command)
+      command.options = options.map((option) => {
+        return assignOptionConfig(optionConfigs, defaultOption, option)
+      })
     }
 
     return command
   })
 }
+
 
 module.exports = { assignCommandConfigs, assignOptionConfigs }
