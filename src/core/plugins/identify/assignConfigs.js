@@ -8,7 +8,9 @@ function assignCommandConfig(config, commandConfigs, defCommand, command) {
   let { name, inputName } = command
 
   if (!name || typeof name !== 'string') {
-    throw new InputError(`Command "${inputName}" has an invalid name`)
+    let err = new InputError(`Command "${inputName}" has an invalid name`)
+    err.command = command
+    throw err
   }
 
   let commandConfig = commandConfigs && findOneByNames(commandConfigs, name)
@@ -35,11 +37,13 @@ function assignCommandConfigs(config, batch) {
   })
 }
 
-function assignOptionConfig(optionConfigs, defaultOption, option) {
+function assignOptionConfig(optionConfigs, defaultOption, option, command) {
   let { name, inputName } = option
 
   if (!name || typeof name !== 'string') {
-    throw new InputError(`Option "${inputName}" has an invalid name`)
+    let err = new InputError(`Option "${inputName}" has an invalid name`)
+    err.command = command
+    throw err
   }
 
   let optionConfig = optionConfigs && findOneByNames(optionConfigs, name)
@@ -72,7 +76,7 @@ function assignOptionConfigs(config, batch) {
 
       command = Object.assign({}, command)
       command.options = options.map((option) => {
-        return assignOptionConfig(optionConfigs, defaultOption, option)
+        return assignOptionConfig(optionConfigs, defaultOption, option, command)
       })
     }
 

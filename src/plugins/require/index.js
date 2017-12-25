@@ -57,10 +57,12 @@ function validateCommand(config, command) {
     })
 
     if (!requiredOption) {
-      throw new InputError(
+      let err = new InputError(
         `Option "${requiredOptionName}" is required, ` +
         `but not present on command "${inputName || name}"`
       )
+      err.command = command
+      throw err
     }
   })
 }

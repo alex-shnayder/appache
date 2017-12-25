@@ -1,7 +1,7 @@
 const { InputError } = require('../../core/common')
 
 
-function validateOption(option) {
+function validateOption(command, option) {
   let { config, value, inputName } = option
 
   if (config && config.validate) {
@@ -11,10 +11,12 @@ function validateOption(option) {
       validate(option)
     } else if (validate instanceof RegExp) {
       if (!validate.test(value)) {
-        throw new InputError(
-            `Value "${value}" of option "${inputName}" ` +
-            `does not match the regular expression ${validate}`
-          )
+        let err = new InputError(
+          `Value "${value}" of option "${inputName}" ` +
+          `does not match the regular expression ${validate}`
+        )
+        err.command = command
+        throw err
       }
     } else {
       throw new Error('"validate" must be either a function or a regular expression')
@@ -22,9 +24,9 @@ function validateOption(option) {
   }
 }
 
-function validateCommand({ options }) {
-  if (options) {
-    options.forEach((option) => validateOption(option))
+function validateCommand(command) {
+  if (command.options) {
+    command.options.forEach((option) => validateOption(command, option))
   }
 }
 

@@ -19,9 +19,11 @@ function normalizeCommand(command) {
         return { name, value: options[name] }
       })
     } else {
-      throw new InputError(
+      let err = new InputError(
         'The options of a command in a batch must be either an array or an object'
       )
+      err.command = command
+      throw err
     }
   }
 

@@ -6,7 +6,7 @@ const coercers = require('./coercers')
 const TYPES = ['string', 'boolean', 'number', 'function']
 
 
-function processOption(option) {
+function processOption(command, option) {
   let { config, value, inputName } = option
 
   if (!config) {
@@ -24,9 +24,11 @@ function processOption(option) {
   }
 
   if (typeof value !== type || Number.isNaN(value)) {
-    throw new InputError(
+    let err = new InputError(
       `The value of option "${inputName}" must be a ${type}`
     )
+    err.command = command
+    throw err
   }
 
   return Object.assign({}, option, { value })
@@ -39,7 +41,7 @@ function processCommand(command) {
     return command
   }
 
-  options = options.map(processOption)
+  options = options.map((option) => processOption(command, option))
   return Object.assign({}, command, { options })
 }
 
