@@ -1,32 +1,27 @@
 module.exports = function shareOptions(batch) {
-  let sharedOptions
+  let sharedOptions = batch.reduce((sharedOptions, command) => {
+    let { config, options } = command
+    let commandShares = config.sharedOptions || []
+
+    options.forEach((option) => {
+      let { shared, name } = option.config
+
+      if (shared || commandShares === true || commandShares.includes(name)) {
+        sharedOptions.push(option)
+      }
+    })
+
+    return sharedOptions
+  }, [])
+
+  if (!sharedOptions.length) {
+    return batch
+  }
 
   return batch.map((command) => {
-    let { config, options } = command
-    let sharedOptionsConfig = config && config.sharedOptions
-
-    if (sharedOptions && options) {
-      options = options.concat(sharedOptions)
-      command = Object.assign({}, command, { options })
-    }
-
-    if (sharedOptionsConfig && options) {
-      if (sharedOptionsConfig === true) {
-        sharedOptions = options
-      } else {
-        let shareUndefined = sharedOptionsConfig.includes('*')
-        sharedOptions = options.filter((option) => {
-          if (option.config) {
-            return sharedOptionsConfig.includes(option.config.name)
-          } else {
-            return shareUndefined
-          }
-        })
-      }
-    } else {
-      sharedOptions = null
-    }
-
+    let options = command.options || []
+    command = Object.assign({}, command)
+    command.options = sharedOptions.concat(options)
     return command
   })
 }

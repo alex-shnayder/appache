@@ -5,18 +5,19 @@ const COMMAND_PROPERTIES = {
   sharedOptions: {
     type: ['boolean', 'array'],
     items: {
-      oneOf: [{
-        $ref: '#/definitions/option/properties/name',
-      }, {
-        type: 'string',
-        enum: ['*'],
-      }],
+      $ref: '#/definitions/option/properties/name',
     },
     default: [],
+  },
+}
+const OPTION_PROPERTIES = {
+  shared: {
+    type: 'boolean',
   },
 }
 
 
 module.exports = function modifySchema(schema) {
-  return assign(schema, 'definitions.command.properties', COMMAND_PROPERTIES)
+  schema = assign(schema, 'definitions.command.properties', COMMAND_PROPERTIES)
+  return assign(schema, 'definitions.option.properties', OPTION_PROPERTIES)
 }
