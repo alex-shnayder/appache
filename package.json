@@ -2,9 +2,9 @@
   "name": "appache",
   "version": "0.6.2",
   "description": "",
-  "repository": "alex-shnayder/appache",
-  "homepage": "https://github.com/alex-shnayder/appache#readme",
-  "bugs": "https://github.com/alex-shnayder/appache/issues",
+  "repository": "appache/appache",
+  "homepage": "https://github.com/appache/appache#readme",
+  "bugs": "https://github.com/appache/appache/issues",
   "license": "ISC",
   "keywords": [
     "command",
