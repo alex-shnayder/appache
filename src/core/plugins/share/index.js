@@ -3,21 +3,26 @@ const modifySchema = require('./modifySchema')
 const shareOptions = require('./shareOptions')
 
 
+function schematizeHandler(schema) {
+  schema = modifySchema(schema)
+  return [schema]
+}
+
+function executeHandler(config, batch) {
+  batch = shareOptions(batch)
+  return [config, batch]
+}
+
+
 module.exports = function* share() {
   yield preHook({
     event: 'schematize',
     tags: ['modifyCommandSchema'],
-  }, (schema) => {
-    schema = modifySchema(schema)
-    return [schema]
-  })
+  }, schematizeHandler)
 
   yield preHook({
     event: 'execute',
     tags: ['modifyCommand', 'modifyOption'],
     goesAfter: ['identifyOption'],
-  }, (_, batch) => {
-    batch = shareOptions(batch)
-    return [_, batch]
-  })
+  }, executeHandler)
 }

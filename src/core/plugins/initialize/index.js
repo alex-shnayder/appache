@@ -1,11 +1,17 @@
 const { preHookStart, hookEnd, schematize } = require('../../effects')
 
 
-module.exports = function* initialize() {
-  yield preHookStart('initialize', function* () {
-    let schema = yield schematize()
-    return [schema]
-  })
+function* schematizeHandler() {
+  let schema = yield schematize()
+  return [schema]
+}
 
-  yield hookEnd('initialize', (schema, result) => result)
+function resultHandler(schema, result) {
+  return result
+}
+
+
+module.exports = function* initialize() {
+  yield preHookStart('initialize', schematizeHandler)
+  yield hookEnd('initialize', resultHandler)
 }

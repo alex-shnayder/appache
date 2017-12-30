@@ -3,21 +3,26 @@ const modifySchema = require('./modifySchema')
 const addInheritance = require('./addInheritance')
 
 
+function schematizeHandler(schema) {
+  schema = modifySchema(schema)
+  return [schema]
+}
+
+function configureHandler(schema, config) {
+  config = addInheritance(schema, config)
+  return [schema, config]
+}
+
+
 module.exports = function* inherit() {
   yield preHook({
     event: 'schematize',
     tags: ['modifyCommandSchema'],
-  }, (schema) => {
-    schema = modifySchema(schema)
-    return [schema]
-  })
+  }, schematizeHandler)
 
   yield preHook({
     event: 'configure',
     tags: ['modifyCommandConfig'],
     goesBefore: ['modifyCommandConfig'],
-  }, (schema, config) => {
-    config = addInheritance(schema, config)
-    return [schema, config]
-  })
+  }, configureHandler)
 }

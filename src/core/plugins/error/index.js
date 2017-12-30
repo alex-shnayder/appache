@@ -6,6 +6,10 @@ const {
 const NO_HANDLER = {}
 
 
+function initializeArgsHandler(configResult, ...args) {
+  return [configResult.value, ...args]
+}
+
 function* errorStartHandler(config, err, ...args) {
   try {
     yield next(config, err, err && err.event, ...args)
@@ -29,7 +33,7 @@ function* errorEndHandler(config, err, ...args) {
 module.exports = function* error() {
   let config = yield hook('configure')
 
-  yield preHookStart('error', (...args) => [config.value, ...args])
+  yield preHookStart('error', initializeArgsHandler.bind(null, config))
   yield hookStart('error', errorStartHandler)
   yield hookEnd('error', errorEndHandler)
 }

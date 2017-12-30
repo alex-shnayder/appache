@@ -2,7 +2,16 @@ const { preHookStart, hookEnd } = require('hooter/effects')
 const baseSchema = require('./schema')
 
 
+function addSchemaHandler() {
+  return [baseSchema]
+}
+
+function returnSchemaHandler(schema) {
+  return schema
+}
+
+
 module.exports = function* schematize() {
-  yield preHookStart('schematize', () => [baseSchema])
-  yield hookEnd('schematize', (schema) => schema)
+  yield preHookStart('schematize', addSchemaHandler)
+  yield hookEnd('schematize', returnSchemaHandler)
 }
