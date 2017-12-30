@@ -10,7 +10,6 @@ function* dispatchCommands(config, batch) {
       name: 'dispatch',
       args: [config, batch[i], context],
       source: this.source,
-      isFinalCommand: !batch[i + 1],
     })
 
     if (context instanceof Result) {

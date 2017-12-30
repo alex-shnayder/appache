@@ -1,7 +1,7 @@
 const { InputError } = require('../../common')
 
 
-function normalizeCommand(command) {
+function normalizeCommand(command, isLast) {
   if (!command || typeof command !== 'object') {
     throw new InputError('Each command in a batch must be an object')
   }
@@ -10,6 +10,7 @@ function normalizeCommand(command) {
 
   command = Object.assign({}, command)
   command.inputName = command.inputName || command.name
+  command.last = Boolean(isLast)
 
   if (!options) {
     command.options = []
@@ -31,7 +32,10 @@ function normalizeCommand(command) {
 }
 
 function normalizeBatchCommands(batch) {
-  return batch.map(normalizeCommand)
+  return batch.map((command, i) => {
+    let isLast = (i === batch.length - 1)
+    return normalizeCommand(command, isLast)
+  })
 }
 
 function normalizeOption(option) {

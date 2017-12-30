@@ -145,7 +145,7 @@ class LifecycleProxy extends Hooter.HooterProxy {
     return function* tapOrHandleHook(config, _command, context) {
       if (
         typeof checkIfCommandIsFinal !== 'boolean' ||
-        checkIfCommandIsFinal === this.isFinalCommand
+        checkIfCommandIsFinal === _command.last
       ) {
         if (_command.config && _command.config.id === commandId) {
           let options = optionsToObject(_command.options)
