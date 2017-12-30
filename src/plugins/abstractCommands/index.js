@@ -1,31 +1,27 @@
 const { preHook } = require('hooter/effects')
-const { InputError } = require('../../core/common')
 const modifySchema = require('./modifySchema')
+const dontHandleAbstractCommand = require('./dontHandleAbstractCommand')
 
 
-function dontHandleAbstractCommand(_, command) {
-  if (this.isFinalCommand && command.config && command.config.abstract) {
-    let err = new InputError(
-      `Command "${command.inputName}" cannot be used directly. ` +
-      'Please specify a subcommand'
-    )
-    err.command = command
-    throw err
-  }
+function schematizeHandler(schema) {
+  schema = modifySchema(schema)
+  return [schema]
 }
+
+function dispatchHandler(config, command) {
+  dontHandleAbstractCommand(command, this.isFinalCommand)
+}
+
 
 module.exports = function* abstractCommands() {
   yield preHook({
     event: 'schematize',
     tags: ['modifyCommandSchema'],
-  }, (schema) => {
-    schema = modifySchema(schema)
-    return [schema]
-  })
+  }, schematizeHandler)
 
   yield preHook({
     event: 'dispatch',
     tags: ['handleCommand'],
     goesBefore: ['handleCommand'],
-  }, dontHandleAbstractCommand)
+  }, dispatchHandler)
 }

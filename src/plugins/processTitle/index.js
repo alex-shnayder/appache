@@ -1,17 +1,13 @@
-const { postHookEnd } = require('hooter/effects')
-const { findDefaultCommand } = require('../../core/common')
+const { postHookEnd, call } = require('hooter/effects')
+const setProcessTitle = require('./setProcessTitle')
 
 
-function setProcessTitle(config) {
-  let command = findDefaultCommand(config)
-
-  if (command) {
-    process.title = command.name
-  }
-
+function* handler(config) {
+  yield call(setProcessTitle, config)
   return config
 }
 
+
 module.exports = function* processTitle() {
-  yield postHookEnd('configure', setProcessTitle)
+  yield postHookEnd('configure', handler)
 }

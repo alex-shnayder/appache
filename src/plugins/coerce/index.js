@@ -1,44 +1,27 @@
 const { preHook } = require('hooter/effects')
 const modifySchema = require('./modifySchema')
+const coerceBatchOptions = require('./coerceBatchOptions')
 
 
-function coerceOption(option) {
-  let { config, value } = option
-
-  if (!config || !config.coerce) {
-    return option
-  }
-
-  value = config.coerce(value)
-  return Object.assign({}, option, { value })
+function schematizeHandler(schema) {
+  schema = modifySchema(schema)
+  return [schema]
 }
 
-function handler(config, batch) {
-  batch = batch.map((command) => {
-    let options = command.options
-
-    if (options) {
-      command = Object.assign({}, command)
-      command.options = options.map((option) => coerceOption(option))
-    }
-
-    return command
-  })
-
+function executeHandler(config, batch) {
+  batch = coerceBatchOptions(batch)
   return [config, batch]
 }
+
 
 module.exports = function* coerce() {
   yield preHook({
     event: 'schematize',
     tags: ['modifyOptionSchema'],
-  }, (schema) => {
-    schema = modifySchema(schema)
-    return [schema]
-  })
+  }, schematizeHandler)
 
   yield preHook({
     event: 'execute',
     tags: ['modifyOption'],
-  }, handler)
+  }, executeHandler)
 }

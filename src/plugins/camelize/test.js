@@ -1,5 +1,6 @@
 const assert = require('assert')
-const { handler, camelizeOptions } = require('./index?private')
+const camelizeBatchOptions = require('./camelizeBatchOptions')
+const { handler } = require('./index?private')
 const camelizePlugin = require('./index')
 
 
@@ -26,12 +27,12 @@ describe('camelize plugin', () => {
     let resultBatch = [{}, {}]
     let generator = handler(config, batch)
 
-    it('calls camelizeOptions for each command in the batch', () => {
+    it('calls camelizeBatchOptions for each command in the batch', () => {
       let { value } = generator.next()
 
       assert.deepStrictEqual(value, {
         effect: 'call',
-        fn: camelizeOptions,
+        fn: camelizeBatchOptions,
         args: [batch[0]],
       })
 
@@ -39,7 +40,7 @@ describe('camelize plugin', () => {
 
       assert.deepStrictEqual(value, {
         effect: 'call',
-        fn: camelizeOptions,
+        fn: camelizeBatchOptions,
         args: [batch[1]],
       })
     })
@@ -53,10 +54,10 @@ describe('camelize plugin', () => {
     })
   })
 
-  describe('camelizeOptions', () => {
+  describe('camelizeBatchOptions', () => {
     it('returns the given command if it has no options', () => {
       let command = {}
-      let result = camelizeOptions(command)
+      let result = camelizeBatchOptions(command)
       assert(command === result)
     })
 
@@ -66,7 +67,7 @@ describe('camelize plugin', () => {
           name: 'foo-bar',
         }],
       }
-      let result = camelizeOptions(command)
+      let result = camelizeBatchOptions(command)
 
       assert.deepStrictEqual(result, {
         options: [{

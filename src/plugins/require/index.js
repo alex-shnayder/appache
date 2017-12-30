@@ -1,69 +1,22 @@
 const { preHook } = require('hooter/effects')
-const { InputError, findByIds } = require('../../core/common')
 const modifySchema = require('./modifySchema')
+const normalizeConfig = require('./normalizeConfig')
+const validateCommand = require('./validateCommand')
 
 
-function getRequiredOptionsForCommand(config, command) {
-  let { requiredOptions, options } = command
-  let requireAll = false
-
-  if (requiredOptions === true) {
-    requireAll = true
-    requiredOptions = []
-  } else if (!requiredOptions) {
-    requiredOptions = []
-  } else {
-    requiredOptions = requiredOptions.slice()
-  }
-
-  if (options) {
-    findByIds(config.options, options).forEach(({ name, required }) => {
-      if (required === false) {
-        requiredOptions = requiredOptions.filter((n) => n !== name)
-      } else if ((required || requireAll) && !requiredOptions.includes(name)) {
-        requiredOptions.push(name)
-      }
-    })
-  }
-
-  return requiredOptions
+function schematizeHandler(schema) {
+  schema = modifySchema(schema)
+  return [schema]
 }
 
-function normalizeConfig(config) {
-  let { commands } = config
-
-  if (commands && commands.length) {
-    commands = commands.map((command) => {
-      let requiredOptions = getRequiredOptionsForCommand(config, command)
-      return Object.assign({}, command, { requiredOptions })
-    })
-    config = Object.assign({}, config, { commands })
-  }
-
-  return config
+function configureHandler(schema, config) {
+  config = normalizeConfig(config)
+  return [schema, config]
 }
 
-function validateCommand(config, command) {
-  let { config: commandConfig, options, inputName, name } = command
-  let { requiredOptions } = commandConfig
-
-  if (!requiredOptions) {
-    return
-  }
-
-  requiredOptions.forEach((requiredOptionName) => {
-    let requiredOption = options.find((option) => {
-      return option.config && option.config.name === requiredOptionName
-    })
-
-    if (!requiredOption) {
-      let err = new InputError(
-        `Option "${requiredOptionName}" is required, ` +
-        `but not present on command "${inputName || name}"`
-      )
-      err.command = command
-      throw err
-    }
+function executeHandler(config, batch) {
+  batch.forEach((command) => {
+    validateCommand(config, command)
   })
 }
 
@@ -72,27 +25,17 @@ module.exports = function* require() {
   yield preHook({
     event: 'schematize',
     tags: ['modifyOptionSchema'],
-  }, (schema) => {
-    schema = modifySchema(schema)
-    return [schema]
-  })
+  }, schematizeHandler)
 
   yield preHook({
     event: 'configure',
     tags: ['modifyCommandConfig'],
     goesAfter: ['modifyCommandConfig'],
-  }, (schema, config) => {
-    config = normalizeConfig(config)
-    return [schema, config]
-  })
+  }, configureHandler)
 
   yield preHook({
     event: 'execute',
     goesAfter: ['modifyOption'],
     goesBefore: ['handleBatch'],
-  }, (config, batch) => {
-    batch.forEach((command) => {
-      validateCommand(config, command)
-    })
-  })
+  }, executeHandler)
 }

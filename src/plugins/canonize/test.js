@@ -1,10 +1,11 @@
 const assert = require('assert')
-const { handler, canonize } = require('./index?private')
+const canonizeBatchOptions = require('./canonizeBatchOptions')
+const { handler } = require('./index?private')
 const canonizePlugin = require('./index')
 
 
 describe('canonize plugin', () => {
-  it('hooks the process handler', () => {
+  it('hooks the handler', () => {
     let generator = canonizePlugin()
     let { value } = generator.next()
 
@@ -25,12 +26,12 @@ describe('canonize plugin', () => {
     let resultBatch = [{}, {}]
     let generator = handler(config, batch)
 
-    it('calls canonize for each command in the batch', () => {
+    it('calls canonizeBatchOptions for each command in the batch', () => {
       let { value } = generator.next()
 
       assert.deepStrictEqual(value, {
         effect: 'call',
-        fn: canonize,
+        fn: canonizeBatchOptions,
         args: [batch[0]],
       })
 
@@ -38,7 +39,7 @@ describe('canonize plugin', () => {
 
       assert.deepStrictEqual(value, {
         effect: 'call',
-        fn: canonize,
+        fn: canonizeBatchOptions,
         args: [batch[1]],
       })
     })
@@ -52,7 +53,7 @@ describe('canonize plugin', () => {
     })
   })
 
-  describe('canonize', () => {
+  describe('canonizeBatchOptions', () => {
     it('sets the names of the command\'s options to the names defined in their configs', () => {
       let command = {
         fullName: [],
@@ -65,7 +66,7 @@ describe('canonize plugin', () => {
           name: 'bar',
         }],
       }
-      let result = canonize(command)
+      let result = canonizeBatchOptions(command)
 
       assert.deepStrictEqual(result, {
         fullName: [],

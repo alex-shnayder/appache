@@ -1,34 +1,17 @@
 const { preHook, call } = require('hooter/effects')
+const canonizeBatchOptions = require('./canonizeBatchOptions')
 
-
-function canonize(command) {
-  let { options } = command
-
-  if (options && options.length) {
-    command = Object.assign({}, command)
-    command.options = options.map((option) => {
-      if (!option.config) {
-        return option
-      }
-
-      option = Object.assign({}, option)
-      option.name = option.config.name || option.name
-      return option
-    })
-  }
-
-  return command
-}
 
 function* handler(config, batch) {
   let newBatch = []
 
   for (let i = 0; i < batch.length; i++) {
-    newBatch[i] = yield call(canonize, batch[i])
+    newBatch[i] = yield call(canonizeBatchOptions, batch[i])
   }
 
   return [config, newBatch]
 }
+
 
 module.exports = function* canonize() {
   yield preHook({
