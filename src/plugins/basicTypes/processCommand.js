@@ -2,8 +2,18 @@ const { InputError } = require('../../core/common')
 const coercers = require('./coercers')
 
 
-const TYPES = ['string', 'boolean', 'number', 'function']
+const TYPES = ['auto', 'string', 'boolean', 'number', 'function']
 
+
+function isValueValid(value, type) {
+  let valueType = typeof value
+
+  if (type === 'auto') {
+    return value === null || ['string', 'number', 'boolean'].includes(valueType)
+  }
+
+  return (valueType === type && !Number.isNaN(value))
+}
 
 function processOption(command, option) {
   let { config, value, inputName } = option
@@ -22,9 +32,9 @@ function processOption(command, option) {
     value = coercers[type](value)
   }
 
-  if (typeof value !== type || Number.isNaN(value)) {
+  if (!isValueValid(value, type)) {
     let err = new InputError(
-      `The value of option "${inputName}" must be a ${type}`
+      `The value of option "${inputName}" must be of type "${type}"`
     )
     err.command = command
     throw err

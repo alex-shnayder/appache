@@ -20,3 +20,20 @@ exports.number = function coerceNumber(value) {
   let newValue = (value === null) ? 1 : Number(value)
   return Number.isNaN(newValue) ? value : newValue
 }
+
+exports.auto = function coerceAuto(value) {
+  if (typeof value !== 'string') {
+    return value
+  }
+
+  if (value === 'null') {
+    return null
+  } else if (value === 'true') {
+    return true
+  } else if (value === 'false') {
+    return false
+  } else {
+    let numValue = Number(value)
+    return Number.isNaN(numValue) ? value : numValue
+  }
+}
