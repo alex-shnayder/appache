@@ -34,7 +34,9 @@ function normalizeOptionsHandler(config, batch) {
 module.exports = function* execute() {
   let config = yield hook('configure')
 
-  yield preHookStart('execute', initializeEventHandler.bind(null, config))
+  yield preHookStart('execute', function(batch) {
+    return initializeEventHandler.call(this, config, batch)
+  })
 
   yield preHook({
     event: 'execute',
