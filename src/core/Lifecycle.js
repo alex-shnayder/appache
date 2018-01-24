@@ -1,7 +1,7 @@
 const Hooter = require('hooter')
 const { next } = require('hooter/effects')
 const rawEvents = require('./events')
-const { optionsToObject } = require('./common')
+const { Result, optionsToObject } = require('./common')
 
 
 const events = normalizeEventsConfig(rawEvents)
@@ -142,18 +142,22 @@ class LifecycleProxy extends Hooter.HooterProxy {
 
     handler = this.wrap(handler)
 
-    return function* tapOrHandleHook(config, _command, context) {
+    return function* tapOrHandleHook(config, command, context) {
       if (
         typeof checkIfCommandIsFinal !== 'boolean' ||
-        checkIfCommandIsFinal === _command.last
+        checkIfCommandIsFinal === command.last
       ) {
-        if (_command.config && _command.config.id === commandId) {
-          let options = optionsToObject(_command.options)
-          context = yield handler.call(this, options, context)
+        if (command.config && command.config.id === commandId) {
+          let options = optionsToObject(command.options)
+          context = yield handler.call(this, options, context, command.name)
         }
       }
 
-      return yield next(config, _command, context)
+      if (context instanceof Result) {
+        return context
+      } else {
+        return yield next(config, command, context)
+      }
     }
   }
 
