@@ -1,15 +1,3 @@
-function filterOutRepeatedOptions(options) {
-  return options.filter((option) => {
-    if (!option.addedByDefaultValues) {
-      return true
-    }
-
-    return !options.find((o) => {
-      return o.config.id === option.config.id && !o.addedByDefaultValues
-    })
-  })
-}
-
 function setDefaultValues(options) {
   return options.map((option) => {
     let { value, config } = option
@@ -28,9 +16,8 @@ module.exports = function setDefaultValuesForBatch(batch) {
     let { options } = command
 
     if (options && options.length) {
-      options = filterOutRepeatedOptions(options)
-      options = setDefaultValues(options)
-      command = Object.assign({}, command, { options })
+      command = Object.assign({}, command)
+      command.options = setDefaultValues(options)
     }
 
     return command

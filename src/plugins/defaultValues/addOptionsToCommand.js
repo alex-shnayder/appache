@@ -11,7 +11,6 @@ function getOptionsWithDefaultValues(optionConfigs) {
         inputName: name,
         value: defaultValue,
         config: optionConfig,
-        addedByDefaultValues: true,
       })
     }
 
@@ -31,7 +30,7 @@ module.exports = function addOptionsToCommand(config, command) {
 
   if (options.length) {
     command = Object.assign({}, command)
-    command.options = (command.options || []).concat(options)
+    command.options = options.concat(command.options || [])
   }
 
   return command

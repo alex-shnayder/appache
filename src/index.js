@@ -2,6 +2,7 @@
 
 const core = require('./core')
 const defaultPlugins = [
+  require('./plugins/deduplicate'),
   require('./plugins/alias'),
   require('./plugins/require'),
   require('./plugins/coerce'),

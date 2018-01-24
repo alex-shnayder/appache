@@ -36,7 +36,7 @@ module.exports = function* defaultValues() {
 
   yield preHook({
     event: 'execute',
-    tags: ['modifyOption', 'removeOption'],
+    tags: ['modifyOption'],
     goesAfter: ['identifyOption'],
   }, setDefaultValuesHandler)
 }
