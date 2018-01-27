@@ -2,7 +2,7 @@ const { InputError } = require('../../core/common')
 const coercers = require('./coercers')
 
 
-const TYPES = ['auto', 'string', 'boolean', 'number', 'function']
+const TYPES = ['auto', 'string', 'boolean', 'number', 'function', 'array']
 
 
 function isValueValid(value, type) {
@@ -10,6 +10,8 @@ function isValueValid(value, type) {
 
   if (type === 'auto') {
     return value === null || ['string', 'number', 'boolean'].includes(valueType)
+  } else if (type === 'array') {
+    return Array.isArray(value)
   }
 
   return (valueType === type && !Number.isNaN(value))

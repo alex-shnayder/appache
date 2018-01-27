@@ -37,3 +37,13 @@ exports.auto = function coerceAuto(value) {
     return Number.isNaN(numValue) ? value : numValue
   }
 }
+
+exports.array = function coerceArray(value) {
+  if (value === undefined) {
+    return []
+  } else if (!Array.isArray(value)) {
+    return [exports.auto(value)]
+  } else {
+    return value.map(exports.auto)
+  }
+}
