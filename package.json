@@ -2,6 +2,7 @@
   "name": "appache",
   "version": "0.8.0",
   "description": "",
+  "author": "Alex Schneider <me@schneider.ax>",
   "repository": "appache/appache",
   "homepage": "https://github.com/appache/appache#readme",
   "bugs": "https://github.com/appache/appache/issues",
