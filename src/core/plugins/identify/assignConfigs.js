@@ -54,9 +54,12 @@ function assignOptionConfig(optionConfigs, defaultOption, option, command) {
   let optionConfig = optionConfigs && findOneByNames(optionConfigs, name)
 
   if (!optionConfig && defaultOption) {
+    // Default options are special: they aren't considered duplicates even
+    // though all of them have the same id, and the names from their configs
+    // shouldn't be used to reference them
+    // TODO: find a better way to do this?
     optionConfig = Object.assign({}, defaultOption)
-    // There must be a better way to tell other plugins not to use the name
-    // from the option's config
+    optionConfig.default = true
     delete optionConfig.name
     delete optionConfig.aliases
   }

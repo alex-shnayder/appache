@@ -5,10 +5,16 @@ module.exports = function removeDuplicateOptions(batch) {
     // In case there are options with the same id,
     // prefer the one with a higher index
     options = options.filter((option, i) => {
-      let { id } = option.config
+      let { id, default: isDefault } = option.config
+
+      if (isDefault) {
+        return true
+      }
 
       for (let j = options.length - 1; j > i; j--) {
-        if (id === options[j].config.id) {
+        let { id: jId, default: jIsDefault } = options[j].config
+
+        if (!jIsDefault && id === jId) {
           return false
         }
       }
